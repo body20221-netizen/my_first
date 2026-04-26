@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abstract Classes & Interfaces — Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #181c26;
+    --border: #252a38;
+    --accent: #4f8ef7;
+    --accent2: #a78bfa;
+    --correct: #22d3a0;
+    --wrong: #f87171;
+    --warn: #fbbf24;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --code-bg: #0a0c12;
+    --highlight: rgba(79,142,247,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, #0d0f14 0%, #111827 50%, #0d0f14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% -20%, rgba(79,142,247,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(79,142,247,0.35);
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 22px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Score card ── */
+  .score-card {
+    margin: 30px auto;
+    max-width: 900px;
+    padding: 0 24px;
+  }
+  .score-inner {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .score-left { display: flex; align-items: center; gap: 16px; }
+  .score-icon { font-size: 28px; }
+  .score-label { font-size: 13px; color: var(--muted); }
+  .score-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  #score-msg { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--warn); }
+  .btn-reset {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .btn-reset:hover { opacity: .85; }
+
+  /* ── Section headers ── */
+  .section-header {
+    max-width: 900px;
+    margin: 40px auto 0;
+    padding: 0 24px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .section-title .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent2);
+    flex-shrink: 0;
+  }
+  .section-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+
+  /* ── Questions ── */
+  .questions-wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
+
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .q-card:hover { border-color: rgba(79,142,247,0.3); }
+  .q-card.answered-correct { border-color: var(--correct); }
+  .q-card.answered-wrong { border-color: var(--wrong); }
+
+  .q-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 22px 16px;
+  }
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(79,142,247,0.1);
+    border: 1px solid rgba(79,142,247,0.2);
+    padding: 3px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .q-text { font-weight: 500; color: var(--text); flex: 1; }
+
+  pre.code-block {
+    background: var(--code-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: 14px 18px;
+    margin: 0 22px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: #c9d1d9;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .kw { color: #79b8ff; }
+  .type { color: #ffab70; }
+  .str { color: #9ecbff; }
+  .cmt { color: #6a737d; font-style: italic; }
+  .err { color: var(--wrong); }
+  .num { color: #b5e8a8; }
+
+  /* ── Options ── */
+  .options { padding: 0 22px 14px; display: grid; gap: 8px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .15s;
+    background: var(--surface);
+    font-size: 14px;
+  }
+  .opt:hover { border-color: var(--accent); background: var(--highlight); }
+  .opt-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(79,142,247,0.12);
+    border-radius: 3px;
+    padding: 1px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .opt.correct { background: rgba(34,211,160,0.08); border-color: var(--correct); }
+  .opt.correct .opt-letter { background: rgba(34,211,160,0.2); color: var(--correct); }
+  .opt.wrong { background: rgba(248,113,113,0.08); border-color: var(--wrong); }
+  .opt.wrong .opt-letter { background: rgba(248,113,113,0.2); color: var(--wrong); }
+  .opt.disabled { cursor: default; pointer-events: none; }
+
+  /* ── Explanation ── */
+  .explanation {
+    display: none;
+    background: rgba(79,142,247,0.05);
+    border-top: 1px solid var(--border);
+    padding: 14px 22px;
+    font-size: 13.5px;
+    color: #b0bcd1;
+    line-height: 1.7;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent); }
+  .exp-head {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 30px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 34px; }
+    .stats-bar { gap: 20px; }
+    .q-head { padding: 16px 16px 12px; }
+    pre.code-block { margin: 0 14px 12px; font-size: 11.5px; }
+    .options { padding: 0 14px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">Programming II · OOP</div>
+  <h1>Abstract Classes<br>&amp; <span>Interfaces</span></h1>
+  <p>50 Multiple-Choice Questions · Java · B O D Y EDITION</p>
+</header>
+
+<div class="stats-bar">
+  <div class="stat"><span class="stat-num">50</span><span class="stat-label">Total Questions</span></div>
+  <div class="stat"><span class="stat-num">23</span><span class="stat-label">Theoretical</span></div>
+  <div class="stat"><span class="stat-num">27</span><span class="stat-label">Code / Trace / Error</span></div>
+  <div class="stat"><span class="stat-num" id="score-display">0</span><span class="stat-label">Score</span></div>
+</div>
+
+<div class="score-card">
+  <div class="score-inner">
+    <div class="score-left">
+      <div class="score-icon">🎯</div>
+      <div>
+        <div class="score-label">Your Score</div>
+        <div class="score-value" id="score-big">0 / 50</div>
+        <div id="score-msg">Answer questions to see your progress</div>
+      </div>
+    </div>
+    <button class="btn-reset" onclick="resetAll()">↺ Reset Quiz</button>
+  </div>
+</div>
+
+<!-- SECTION 1: THEORETICAL -->
+<div class="section-header">
+  <div class="section-title"><span class="dot"></span>Part I — Theoretical Questions</div>
+  <div class="section-sub">Concepts, definitions, and rules of abstract classes and interfaces</div>
+</div>
+
+<div class="questions-wrap" id="q-container">
+
+<!-- Q1 -->
+<div class="q-card" id="qc1">
+  <div class="q-head">
+    <span class="q-num">Q 01</span>
+    <span class="q-text">What keyword is used to declare an abstract class in Java?</span>
+  </div>
+  <div class="options" id="opts1">
+    <div class="opt" onclick="answer(1,'A')"><span class="opt-letter">A</span>interface</div>
+    <div class="opt" onclick="answer(1,'B')"><span class="opt-letter">B</span>abstract</div>
+    <div class="opt" onclick="answer(1,'C')"><span class="opt-letter">C</span>extends</div>
+    <div class="opt" onclick="answer(1,'D')"><span class="opt-letter">D</span>virtual</div>
+  </div>
+  <div class="explanation" id="exp1"><div class="exp-head">✦ Explanation</div>The <strong>abstract</strong> keyword is placed before the <code>class</code> keyword to declare an abstract class: <code>public abstract class ClassName</code>. Java does not have a <code>virtual</code> keyword like C++.</div>
+</div>
+
+<!-- Q2 -->
+<div class="q-card" id="qc2">
+  <div class="q-head">
+    <span class="q-num">Q 02</span>
+    <span class="q-text">Which statement about abstract classes is TRUE?</span>
+  </div>
+  <div class="options" id="opts2">
+    <div class="opt" onclick="answer(2,'A')"><span class="opt-letter">A</span>An abstract class can be instantiated directly</div>
+    <div class="opt" onclick="answer(2,'B')"><span class="opt-letter">B</span>An abstract class cannot be instantiated, but can be subclassed</div>
+    <div class="opt" onclick="answer(2,'C')"><span class="opt-letter">C</span>An abstract class must contain only abstract methods</div>
+    <div class="opt" onclick="answer(2,'D')"><span class="opt-letter">D</span>An abstract class cannot have constructors</div>
+  </div>
+  <div class="explanation" id="exp2"><div class="exp-head">✦ Explanation</div>An abstract class <strong>cannot be instantiated</strong>, but other classes can extend it. It may contain both abstract and non-abstract methods, and it can have constructors that subclasses call via <code>super()</code>.</div>
+</div>
+
+<!-- Q3 -->
+<div class="q-card" id="qc3">
+  <div class="q-head">
+    <span class="q-num">Q 03</span>
+    <span class="q-text">What is an abstract method?</span>
+  </div>
+  <div class="options" id="opts3">
+    <div class="opt" onclick="answer(3,'A')"><span class="opt-letter">A</span>A method that is private and cannot be inherited</div>
+    <div class="opt" onclick="answer(3,'B')"><span class="opt-letter">B</span>A method with a body declared in a superclass</div>
+    <div class="opt" onclick="answer(3,'C')"><span class="opt-letter">C</span>A method with no body that must be overridden in a subclass</div>
+    <div class="opt" onclick="answer(3,'D')"><span class="opt-letter">D</span>A method that belongs to an interface only</div>
+  </div>
+  <div class="explanation" id="exp3"><div class="exp-head">✦ Explanation</div>An abstract method has <strong>no body</strong> (only the method prototype/header) and must be overridden in any concrete subclass. If a subclass fails to override it, a compiler error results.</div>
+</div>
+
+<!-- Q4 -->
+<div class="q-card" id="qc4">
+  <div class="q-head">
+    <span class="q-num">Q 04</span>
+    <span class="q-text">What happens if a subclass does NOT override an abstract method from its abstract superclass?</span>
+  </div>
+  <div class="options" id="opts4">
+    <div class="opt" onclick="answer(4,'A')"><span class="opt-letter">A</span>The method is silently ignored</div>
+    <div class="opt" onclick="answer(4,'B')"><span class="opt-letter">B</span>A runtime exception is thrown</div>
+    <div class="opt" onclick="answer(4,'C')"><span class="opt-letter">C</span>A compiler error results</div>
+    <div class="opt" onclick="answer(4,'D')"><span class="opt-letter">D</span>The subclass becomes final</div>
+  </div>
+  <div class="explanation" id="exp4"><div class="exp-head">✦ Explanation</div>If a concrete (non-abstract) subclass fails to override all abstract methods, a <strong>compiler error</strong> is produced. The subclass would need to also be declared abstract to avoid the error.</div>
+</div>
+
+<!-- Q5 -->
+<div class="q-card" id="qc5">
+  <div class="q-head">
+    <span class="q-num">Q 05</span>
+    <span class="q-text">An abstract class serves mainly as a _____ for other classes.</span>
+  </div>
+  <div class="options" id="opts5">
+    <div class="opt" onclick="answer(5,'A')"><span class="opt-letter">A</span>Interface</div>
+    <div class="opt" onclick="answer(5,'B')"><span class="opt-letter">B</span>Superclass (parent class)</div>
+    <div class="opt" onclick="answer(5,'C')"><span class="opt-letter">C</span>Subclass (child class)</div>
+    <div class="opt" onclick="answer(5,'D')"><span class="opt-letter">D</span>Static utility class</div>
+  </div>
+  <div class="explanation" id="exp5"><div class="exp-head">✦ Explanation</div>An abstract class is designed to be a <strong>superclass</strong>. It represents the generic or abstract form of all classes derived from it, capturing common characteristics and behavior.</div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card" id="qc6">
+  <div class="q-head">
+    <span class="q-num">Q 06</span>
+    <span class="q-text">Which of the following correctly describes an interface in Java?</span>
+  </div>
+  <div class="options" id="opts6">
+    <div class="opt" onclick="answer(6,'A')"><span class="opt-letter">A</span>An interface is a class that can be instantiated</div>
+    <div class="opt" onclick="answer(6,'B')"><span class="opt-letter">B</span>An interface is similar to an abstract class with all abstract methods</div>
+    <div class="opt" onclick="answer(6,'C')"><span class="opt-letter">C</span>An interface can contain method bodies</div>
+    <div class="opt" onclick="answer(6,'D')"><span class="opt-letter">D</span>An interface uses the extends keyword in class definition</div>
+  </div>
+  <div class="explanation" id="exp6"><div class="exp-head">✦ Explanation</div>An interface is similar to an abstract class where <strong>all methods are abstract</strong>. It cannot be instantiated, and classes use the <strong>implements</strong> keyword to adopt an interface.</div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card" id="qc7">
+  <div class="q-head">
+    <span class="q-num">Q 07</span>
+    <span class="q-text">What keyword does a class use to adopt an interface?</span>
+  </div>
+  <div class="options" id="opts7">
+    <div class="opt" onclick="answer(7,'A')"><span class="opt-letter">A</span>extends</div>
+    <div class="opt" onclick="answer(7,'B')"><span class="opt-letter">B</span>abstract</div>
+    <div class="opt" onclick="answer(7,'C')"><span class="opt-letter">C</span>implements</div>
+    <div class="opt" onclick="answer(7,'D')"><span class="opt-letter">D</span>inherits</div>
+  </div>
+  <div class="explanation" id="exp7"><div class="exp-head">✦ Explanation</div>A class uses the <strong>implements</strong> keyword to adopt an interface: <code>public class MyClass implements MyInterface</code>. The class is then obligated to provide implementations for all interface methods.</div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card" id="qc8">
+  <div class="q-head">
+    <span class="q-num">Q 08</span>
+    <span class="q-text">An interface is often compared to a _____ because a class must fulfill all its method requirements.</span>
+  </div>
+  <div class="options" id="opts8">
+    <div class="opt" onclick="answer(8,'A')"><span class="opt-letter">A</span>Blueprint</div>
+    <div class="opt" onclick="answer(8,'B')"><span class="opt-letter">B</span>Contract</div>
+    <div class="opt" onclick="answer(8,'C')"><span class="opt-letter">C</span>Template</div>
+    <div class="opt" onclick="answer(8,'D')"><span class="opt-letter">D</span>Module</div>
+  </div>
+  <div class="explanation" id="exp8"><div class="exp-head">✦ Explanation</div>An interface is like a <strong>contract</strong>. When a class implements an interface, it must adhere to the contract by providing implementations for all methods declared in the interface.</div>
+</div>
+
+<!-- Q9 -->
+<div class="q-card" id="qc9">
+  <div class="q-head">
+    <span class="q-num">Q 09</span>
+    <span class="q-text">How many interfaces can a Java class implement?</span>
+  </div>
+  <div class="options" id="opts9">
+    <div class="opt" onclick="answer(9,'A')"><span class="opt-letter">A</span>Only one</div>
+    <div class="opt" onclick="answer(9,'B')"><span class="opt-letter">B</span>Only two</div>
+    <div class="opt" onclick="answer(9,'C')"><span class="opt-letter">C</span>Multiple interfaces</div>
+    <div class="opt" onclick="answer(9,'D')"><span class="opt-letter">D</span>None — a class cannot implement any interface</div>
+  </div>
+  <div class="explanation" id="exp9"><div class="exp-head">✦ Explanation</div>Java allows a class to implement <strong>multiple interfaces</strong>. Interface names are separated by commas after the <code>implements</code> keyword: <code>class X implements A, B, C</code>. However, a class can extend only one superclass.</div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card" id="qc10">
+  <div class="q-head">
+    <span class="q-num">Q 10</span>
+    <span class="q-text">What is the nature of fields declared inside a Java interface?</span>
+  </div>
+  <div class="options" id="opts10">
+    <div class="opt" onclick="answer(10,'A')"><span class="opt-letter">A</span>private and non-static</div>
+    <div class="opt" onclick="answer(10,'B')"><span class="opt-letter">B</span>protected and static</div>
+    <div class="opt" onclick="answer(10,'C')"><span class="opt-letter">C</span>public, static, and final</div>
+    <div class="opt" onclick="answer(10,'D')"><span class="opt-letter">D</span>abstract and mutable</div>
+  </div>
+  <div class="explanation" id="exp10"><div class="exp-head">✦ Explanation</div>All fields in an interface are implicitly <strong>public, static, and final</strong>. Because they are final, they must be initialized at the point of declaration.</div>
+</div>
+
+<!-- Q11 -->
+<div class="q-card" id="qc11">
+  <div class="q-head">
+    <span class="q-num">Q 11</span>
+    <span class="q-text">Which of the following is a valid abstract method declaration?</span>
+  </div>
+  <div class="options" id="opts11">
+    <div class="opt" onclick="answer(11,'A')"><span class="opt-letter">A</span><code>public abstract void compute() { return; }</code></div>
+    <div class="opt" onclick="answer(11,'B')"><span class="opt-letter">B</span><code>public abstract void compute();</code></div>
+    <div class="opt" onclick="answer(11,'C')"><span class="opt-letter">C</span><code>private abstract void compute();</code></div>
+    <div class="opt" onclick="answer(11,'D')"><span class="opt-letter">D</span><code>static abstract void compute();</code></div>
+  </div>
+  <div class="explanation" id="exp11"><div class="exp-head">✦ Explanation</div>A valid abstract method has <strong>no body</strong> and ends with a semicolon: <code>public abstract void compute();</code>. Abstract methods cannot be private (they must be overridden) or static.</div>
+</div>
+
+<!-- Q12 -->
+<div class="q-card" id="qc12">
+  <div class="q-head">
+    <span class="q-num">Q 12</span>
+    <span class="q-text">What is the correct syntax to declare an interface?</span>
+  </div>
+  <div class="options" id="opts12">
+    <div class="opt" onclick="answer(12,'A')"><span class="opt-letter">A</span><code>public abstract class MyInterface { }</code></div>
+    <div class="opt" onclick="answer(12,'B')"><span class="opt-letter">B</span><code>public interface MyInterface { }</code></div>
+    <div class="opt" onclick="answer(12,'C')"><span class="opt-letter">C</span><code>public implements MyInterface { }</code></div>
+    <div class="opt" onclick="answer(12,'D')"><span class="opt-letter">D</span><code>interface abstract MyInterface { }</code></div>
+  </div>
+  <div class="explanation" id="exp12"><div class="exp-head">✦ Explanation</div>The correct syntax is <strong><code>public interface InterfaceName { method headers; }</code></strong>. The <code>interface</code> keyword replaces <code>class</code>.</div>
+</div>
+
+<!-- Q13 -->
+<div class="q-card" id="qc13">
+  <div class="q-head">
+    <span class="q-num">Q 13</span>
+    <span class="q-text">How many superclasses can a Java class extend simultaneously?</span>
+  </div>
+  <div class="options" id="opts13">
+    <div class="opt" onclick="answer(13,'A')"><span class="opt-letter">A</span>Unlimited</div>
+    <div class="opt" onclick="answer(13,'B')"><span class="opt-letter">B</span>Two</div>
+    <div class="opt" onclick="answer(13,'C')"><span class="opt-letter">C</span>Only one</div>
+    <div class="opt" onclick="answer(13,'D')"><span class="opt-letter">D</span>Three</div>
+  </div>
+  <div class="explanation" id="exp13"><div class="exp-head">✦ Explanation</div>Java supports <strong>single inheritance</strong> — a class can extend only <strong>one</strong> superclass. However, implementing multiple interfaces is allowed as a workaround for multiple inheritance.</div>
+</div>
+
+<!-- Q14 -->
+<div class="q-card" id="qc14">
+  <div class="q-head">
+    <span class="q-num">Q 14</span>
+    <span class="q-text">Which statement correctly differentiates an abstract class from an interface?</span>
+  </div>
+  <div class="options" id="opts14">
+    <div class="opt" onclick="answer(14,'A')"><span class="opt-letter">A</span>An interface can have non-abstract methods; an abstract class cannot</div>
+    <div class="opt" onclick="answer(14,'B')"><span class="opt-letter">B</span>An abstract class can have both abstract and non-abstract methods; an interface (traditionally) has only abstract method headers</div>
+    <div class="opt" onclick="answer(14,'C')"><span class="opt-letter">C</span>Both are identical in every way</div>
+    <div class="opt" onclick="answer(14,'D')"><span class="opt-letter">D</span>A class can implement multiple abstract classes</div>
+  </div>
+  <div class="explanation" id="exp14"><div class="exp-head">✦ Explanation</div>An <strong>abstract class</strong> can mix abstract and concrete methods, has constructors, and can have instance variables. A traditional <strong>interface</strong> contains only abstract method headers (and final static fields). A class also can extend only one abstract class but implement many interfaces.</div>
+</div>
+
+<!-- Q15 -->
+<div class="q-card" id="qc15">
+  <div class="q-head">
+    <span class="q-num">Q 15</span>
+    <span class="q-text">When a class implements multiple interfaces, what must it do?</span>
+  </div>
+  <div class="options" id="opts15">
+    <div class="opt" onclick="answer(15,'A')"><span class="opt-letter">A</span>Implement methods from only the first interface</div>
+    <div class="opt" onclick="answer(15,'B')"><span class="opt-letter">B</span>Provide implementations for all methods specified in ALL of the interfaces</div>
+    <div class="opt" onclick="answer(15,'C')"><span class="opt-letter">C</span>Choose which interface's methods to implement</div>
+    <div class="opt" onclick="answer(15,'D')"><span class="opt-letter">D</span>Not implement any methods since interfaces are abstract</div>
+  </div>
+  <div class="explanation" id="exp15"><div class="exp-head">✦ Explanation</div>When a class implements multiple interfaces, it must provide concrete implementations for <strong>all methods</strong> declared in <strong>every</strong> interface it implements, or it must itself be declared abstract.</div>
+</div>
+
+<!-- Q16 -->
+<div class="q-card" id="qc16">
+  <div class="q-head">
+    <span class="q-num">Q 16</span>
+    <span class="q-text">Can you use an interface reference variable to point to an object of a class that implements that interface?</span>
+  </div>
+  <div class="options" id="opts16">
+    <div class="opt" onclick="answer(16,'A')"><span class="opt-letter">A</span>No, interface reference variables are not allowed</div>
+    <div class="opt" onclick="answer(16,'B')"><span class="opt-letter">B</span>Yes, but only to call methods defined in the interface</div>
+    <div class="opt" onclick="answer(16,'C')"><span class="opt-letter">C</span>Yes, and it can call any method from the implementing class</div>
+    <div class="opt" onclick="answer(16,'D')"><span class="opt-letter">D</span>No, you must use the concrete class type</div>
+  </div>
+  <div class="explanation" id="exp16"><div class="exp-head">✦ Explanation</div>An interface reference variable can hold an object of any class that implements the interface. However, through that reference you can <strong>only call methods declared in the interface</strong>, not extra methods defined in the implementing class.</div>
+</div>
+
+<!-- Q17 -->
+<div class="q-card" id="qc17">
+  <div class="q-head">
+    <span class="q-num">Q 17</span>
+    <span class="q-text">Why must interface fields be assigned an initialization value?</span>
+  </div>
+  <div class="options" id="opts17">
+    <div class="opt" onclick="answer(17,'A')"><span class="opt-letter">A</span>Because they are abstract</div>
+    <div class="opt" onclick="answer(17,'B')"><span class="opt-letter">B</span>Because they are automatically final</div>
+    <div class="opt" onclick="answer(17,'C')"><span class="opt-letter">C</span>Because all interfaces must be instantiated at some point</div>
+    <div class="opt" onclick="answer(17,'D')"><span class="opt-letter">D</span>Because the JVM requires it for memory allocation</div>
+  </div>
+  <div class="explanation" id="exp17"><div class="exp-head">✦ Explanation</div>Interface fields are implicitly <strong>final</strong>, meaning they are constants. Final variables must be given an initialization value at declaration time because they cannot be changed after that.</div>
+</div>
+
+<!-- Q18 -->
+<div class="q-card" id="qc18">
+  <div class="q-head">
+    <span class="q-num">Q 18</span>
+    <span class="q-text">Which of the following is the correct way to implement two interfaces in a class?</span>
+  </div>
+  <div class="options" id="opts18">
+    <div class="opt" onclick="answer(18,'A')"><span class="opt-letter">A</span><code>public class X implements A implements B</code></div>
+    <div class="opt" onclick="answer(18,'B')"><span class="opt-letter">B</span><code>public class X extends A, B</code></div>
+    <div class="opt" onclick="answer(18,'C')"><span class="opt-letter">C</span><code>public class X implements A, B</code></div>
+    <div class="opt" onclick="answer(18,'D')"><span class="opt-letter">D</span><code>public class X extends A implements B extends C</code></div>
+  </div>
+  <div class="explanation" id="exp18"><div class="exp-head">✦ Explanation</div>To implement multiple interfaces, list them separated by commas after a single <code>implements</code> keyword: <strong><code>public class X implements A, B</code></strong>.</div>
+</div>
+
+<!-- Q19 -->
+<div class="q-card" id="qc19">
+  <div class="q-head">
+    <span class="q-num">Q 19</span>
+    <span class="q-text">Abstract methods are used primarily to ensure that a subclass _____ the method.</span>
+  </div>
+  <div class="options" id="opts19">
+    <div class="opt" onclick="answer(19,'A')"><span class="opt-letter">A</span>hides</div>
+    <div class="opt" onclick="answer(19,'B')"><span class="opt-letter">B</span>implements</div>
+    <div class="opt" onclick="answer(19,'C')"><span class="opt-letter">C</span>ignores</div>
+    <div class="opt" onclick="answer(19,'D')"><span class="opt-letter">D</span>overloads</div>
+  </div>
+  <div class="explanation" id="exp19"><div class="exp-head">✦ Explanation</div>Abstract methods are used to <strong>enforce</strong> that every concrete subclass provides its own implementation (override) of the method. This guarantees consistent behavior across all subclasses.</div>
+</div>
+
+<!-- Q20 -->
+<div class="q-card" id="qc20">
+  <div class="q-head">
+    <span class="q-num">Q 20</span>
+    <span class="q-text">If class <code>SalariedEmployee</code> extends abstract class <code>Employee</code>, what must <code>SalariedEmployee</code> do?</span>
+  </div>
+  <div class="options" id="opts20">
+    <div class="opt" onclick="answer(20,'A')"><span class="opt-letter">A</span>Declare itself as abstract too</div>
+    <div class="opt" onclick="answer(20,'B')"><span class="opt-letter">B</span>Override all abstract methods declared in Employee</div>
+    <div class="opt" onclick="answer(20,'C')"><span class="opt-letter">C</span>Cannot have its own fields</div>
+    <div class="opt" onclick="answer(20,'D')"><span class="opt-letter">D</span>Implement the interface of Employee</div>
+  </div>
+  <div class="explanation" id="exp20"><div class="exp-head">✦ Explanation</div>A concrete subclass must <strong>override all abstract methods</strong> of its abstract parent. In the lecture example, <code>SalariedEmployee</code> must override <code>get_salary()</code> from <code>Employee</code>.</div>
+</div>
+
+<!-- Q21 -->
+<div class="q-card" id="qc21">
+  <div class="q-head">
+    <span class="q-num">Q 21</span>
+    <span class="q-text">Which access modifier CANNOT be applied to an abstract method?</span>
+  </div>
+  <div class="options" id="opts21">
+    <div class="opt" onclick="answer(21,'A')"><span class="opt-letter">A</span>public</div>
+    <div class="opt" onclick="answer(21,'B')"><span class="opt-letter">B</span>protected</div>
+    <div class="opt" onclick="answer(21,'C')"><span class="opt-letter">C</span>private</div>
+    <div class="opt" onclick="answer(21,'D')"><span class="opt-letter">D</span>package-private (default)</div>
+  </div>
+  <div class="explanation" id="exp21"><div class="exp-head">✦ Explanation</div>Abstract methods cannot be <strong>private</strong> because a private method cannot be overridden by subclasses. Since abstract methods must be overridden, making them private would create a logical contradiction.</div>
+</div>
+
+<!-- Q22 -->
+<div class="q-card" id="qc22">
+  <div class="q-head">
+    <span class="q-num">Q 22</span>
+    <span class="q-text">The <code>@Override</code> annotation before a method in a subclass means:</span>
+  </div>
+  <div class="options" id="opts22">
+    <div class="opt" onclick="answer(22,'A')"><span class="opt-letter">A</span>The method is new and not inherited</div>
+    <div class="opt" onclick="answer(22,'B')"><span class="opt-letter">B</span>The method overrides a method from the superclass</div>
+    <div class="opt" onclick="answer(22,'C')"><span class="opt-letter">C</span>The method is abstract</div>
+    <div class="opt" onclick="answer(22,'D')"><span class="opt-letter">D</span>The method is static</div>
+  </div>
+  <div class="explanation" id="exp22"><div class="exp-head">✦ Explanation</div><code>@Override</code> is an annotation that tells the compiler the method is <strong>overriding</strong> a method from its superclass or interface. The compiler will report an error if the method does not actually override anything.</div>
+</div>
+
+<!-- Q23 -->
+<div class="q-card" id="qc23">
+  <div class="q-head">
+    <span class="q-num">Q 23</span>
+    <span class="q-text">A class that implements an interface but does not implement all its methods must be declared as:</span>
+  </div>
+  <div class="options" id="opts23">
+    <div class="opt" onclick="answer(23,'A')"><span class="opt-letter">A</span>final</div>
+    <div class="opt" onclick="answer(23,'B')"><span class="opt-letter">B</span>static</div>
+    <div class="opt" onclick="answer(23,'C')"><span class="opt-letter">C</span>abstract</div>
+    <div class="opt" onclick="answer(23,'D')"><span class="opt-letter">D</span>interface</div>
+  </div>
+  <div class="explanation" id="exp23"><div class="exp-head">✦ Explanation</div>If a class does not implement all methods of an interface, it must itself be declared <strong>abstract</strong>. The unimplemented methods are then abstract methods that a further subclass must implement.</div>
+</div>
+
+<!-- ─── SECTION 2: CODE / TRACE / ERROR ─── -->
+</div><!-- end questions-wrap -->
+
+<div class="section-header">
+  <div class="section-title"><span class="dot" style="background:var(--warn)"></span>Part II — Code Tracing &amp; Error Detection</div>
+  <div class="section-sub">Read the code carefully, trace its execution, and identify errors or outputs</div>
+</div>
+
+<div class="questions-wrap">
+
+<!-- Q24 -->
+<div class="q-card" id="qc24">
+  <div class="q-head">
+    <span class="q-num">Q 24</span>
+    <span class="q-text">What is the output / result of compiling and running this code?</span>
+  </div>
+  <pre class="code-block"><span class="kw">public abstract class</span> <span class="type">Shape</span> { }
+<span class="kw">public class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Shape</span> s = <span class="kw">new</span> <span class="type">Shape</span>();
+    }
+}</pre>
+  <div class="options" id="opts24">
+    <div class="opt" onclick="answer(24,'A')"><span class="opt-letter">A</span>Compiles and runs with no output</div>
+    <div class="opt" onclick="answer(24,'B')"><span class="opt-letter">B</span>Runtime NullPointerException</div>
+    <div class="opt" onclick="answer(24,'C')"><span class="opt-letter">C</span>Compiler error</div>
+    <div class="opt" onclick="answer(24,'D')"><span class="opt-letter">D</span>Compiles but prints null</div>
+  </div>
+  <div class="explanation" id="exp24"><div class="exp-head">✦ Explanation</div>You cannot instantiate an abstract class. The compiler produces: <strong>"error: Shape is abstract; cannot be instantiated"</strong>.</div>
+</div>
+
+<!-- Q25 -->
+<div class="q-card" id="qc25">
+  <div class="q-head">
+    <span class="q-num">Q 25</span>
+    <span class="q-text">Identify the error in the following code:</span>
+  </div>
+  <pre class="code-block"><span class="kw">public abstract class</span> <span class="type">Animal</span> {
+    <span class="kw">public abstract void</span> speak() {
+        System.out.println(<span class="str">"..."</span>);
+    }
+}</pre>
+  <div class="options" id="opts25">
+    <div class="opt" onclick="answer(25,'A')"><span class="opt-letter">A</span>Animal should not be abstract</div>
+    <div class="opt" onclick="answer(25,'B')"><span class="opt-letter">B</span>Abstract methods cannot have a body</div>
+    <div class="opt" onclick="answer(25,'C')"><span class="opt-letter">C</span>The method must be private</div>
+    <div class="opt" onclick="answer(25,'D')"><span class="opt-letter">D</span>No error; code is correct</div>
+  </div>
+  <div class="explanation" id="exp25"><div class="exp-head">✦ Explanation</div><strong>Abstract methods cannot have a body (implementation)</strong>. The correct declaration should be: <code>public abstract void speak();</code> — ending with a semicolon, no curly braces.</div>
+</div>
+
+<!-- Q26 -->
+<div class="q-card" id="qc26">
+  <div class="q-head">
+    <span class="q-num">Q 26</span>
+    <span class="q-text">What is the output when this program is compiled and run?</span>
+  </div>
+  <pre class="code-block"><span class="kw">public abstract class</span> <span class="type">Employee</span> {
+    <span class="kw">double</span> salary = <span class="num">5000</span>;
+    <span class="kw">public abstract double</span> get_salary();
+}
+<span class="kw">public class</span> <span class="type">SalariedEmployee</span> <span class="kw">extends</span> <span class="type">Employee</span> {
+    <span class="kw">double</span> bonus = <span class="num">1000</span>, deduction = <span class="num">200</span>;
+    @Override
+    <span class="kw">public double</span> get_salary() {
+        <span class="kw">return</span> salary + bonus - deduction;
+    }
+}
+<span class="kw">public class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">SalariedEmployee</span> e = <span class="kw">new</span> <span class="type">SalariedEmployee</span>();
+        System.out.println(e.get_salary());
+    }
+}</pre>
+  <div class="options" id="opts26">
+    <div class="opt" onclick="answer(26,'A')"><span class="opt-letter">A</span>Compiler error</div>
+    <div class="opt" onclick="answer(26,'B')"><span class="opt-letter">B</span>5000.0</div>
+    <div class="opt" onclick="answer(26,'C')"><span class="opt-letter">C</span>5800.0</div>
+    <div class="opt" onclick="answer(26,'D')"><span class="opt-letter">D</span>6000.0</div>
+  </div>
+  <div class="explanation" id="exp26"><div class="exp-head">✦ Explanation</div><code>get_salary()</code> returns <code>5000 + 1000 − 200 = <strong>5800.0</strong></code>. The code is correct — <code>SalariedEmployee</code> properly overrides the abstract method.</div>
+</div>
+
+<!-- Q27 -->
+<div class="q-card" id="qc27">
+  <div class="q-head">
+    <span class="q-num">Q 27</span>
+    <span class="q-text">What happens when you try to instantiate an interface directly?</span>
+  </div>
+  <pre class="code-block"><span class="kw">public interface</span> <span class="type">Retail_Item</span> {
+    <span class="kw">public double</span> getitemprice();
+}
+<span class="kw">public class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Retail_Item</span> r1 = <span class="kw">new</span> <span class="type">Retail_Item</span>();
+    }
+}</pre>
+  <div class="options" id="opts27">
+    <div class="opt" onclick="answer(27,'A')"><span class="opt-letter">A</span>Creates a Retail_Item object successfully</div>
+    <div class="opt" onclick="answer(27,'B')"><span class="opt-letter">B</span>Compiler error</div>
+    <div class="opt" onclick="answer(27,'C')"><span class="opt-letter">C</span>Runtime NullPointerException</div>
+    <div class="opt" onclick="answer(27,'D')"><span class="opt-letter">D</span>Compiles but nothing is printed</div>
+  </div>
+  <div class="explanation" id="exp27"><div class="exp-head">✦ Explanation</div>Interfaces cannot be instantiated. Attempting to do so produces a <strong>compiler error</strong>: "Retail_Item is abstract; cannot be instantiated" — exactly as shown in the lecture slides.</div>
+</div>
+
+<!-- Q28 -->
+<div class="q-card" id="qc35">
+  <div class="q-head">
+    <span class="q-num">Q 28</span>
+    <span class="q-text">What is the output of the following program?</span>
+  </div>
+  <pre class="code-block"><span class="kw">public interface</span> <span class="type">Retail_Item</span> {
+    String storename = <span class="str">"ABC"</span>;
+    <span class="kw">public double</span> getitemprice();
+}
+<span class="kw">public class</span> <span class="type">CD</span> <span class="kw">implements</span> <span class="type">Retail_Item</span>, <span class="type">Displayable</span> {
+    <span class="kw">double</span> price; String title; String artist;
+    <span class="kw">public</span> CD() { }
+    <span class="kw">public double</span> getitemprice() { <span class="kw">return</span> price; }
+    <span class="kw">public void</span> display() {
+        System.out.println(<span class="str">"Store = "</span>+storename+
+          <span class="str">"\ntitle = "</span>+title+<span class="str">"\nprice = "</span>+price+
+          <span class="str">"\nartist = "</span>+artist);
+    }
+}
+<span class="kw">public class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">CD</span> cd = <span class="kw">new</span> <span class="type">CD</span>();
+        cd.display();
+    }
+}</pre>
+  <div class="options" id="opts28">
+    <div class="opt" onclick="answer(28,'A')"><span class="opt-letter">A</span>Compiler error</div>
+    <div class="opt" onclick="answer(28,'B')"><span class="opt-letter">B</span>Store = ABC, title = null, price = 0.0, artist = null</div>
+    <div class="opt" onclick="answer(28,'C')"><span class="opt-letter">C</span>Store = null, title = null, price = null, artist = null</div>
+    <div class="opt" onclick="answer(28,'D')"><span class="opt-letter">D</span>Store = ABC, title = CD1, price = 0.0, artist = null</div>
+  </div>
+  <div class="explanation" id="exp28"><div class="exp-head">✦ Explanation</div>The no-arg constructor leaves <code>title</code> and <code>artist</code> as <code>null</code>, <code>price</code> as <code>0.0</code>. The <code>storename</code> comes from the interface field initialized to <code>"ABC"</code>. Output matches the lecture: <strong>Store = ABC, title = null, price = 0.0, artist = null</strong>.</div>
+</div>
+
+<!-- Q29 -->
+<div class="q-card" id="qc29">
+  <div class="q-head">
+    <span class="q-num">Q 29</span>
+    <span class="q-text">What is the value of <code>x</code> printed by the following code?</span>
+  </div>
+  <pre class="code-block"><span class="kw">public interface</span> <span class="type">Doable</span> {
+    <span class="kw">int</span> FIELD1 = <span class="num">1</span>, FIELD2 = <span class="num">2</span>;
+}
+<span class="kw">public class</span> <span class="type">MyClass</span> <span class="kw">implements</span> <span class="type">Doable</span> {
+    <span class="kw">public void</span> show() {
+        <span class="kw">int</span> x = FIELD1 + FIELD2;
+        System.out.println(x);
+    }
+}
+<span class="kw">public class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="kw">new</span> <span class="type">MyClass</span>().show();
+    }
+}</pre>
+  <div class="options" id="opts29">
+    <div class="opt" onclick="answer(29,'A')"><span class="opt-letter">A</span>0</div>
+    <div class="opt" onclick="answer(29,'B')"><span class="opt-letter">B</span>1</div>
+    <div class="opt" onclick="answer(29,'C')"><span class="opt-letter">C</span>3</div>
+    <div class="opt" onclick="answer(29,'D')"><span class="opt-letter">D</span>Compiler error</div>
+  </div>
+  <div class="explanation" id="exp29"><div class="exp-head">✦ Explanation</div>Interface fields are public static final and accessible in implementing classes. <code>FIELD1 = 1</code> and <code>FIELD2 = 2</code>, so <code>x = 1 + 2 = <strong>3</strong></code>.</div>
+</div>
+
+<!-- Q30 -->
+<div class="q-card" id="qc30">
+  <div class="q-head">
+    <span class="q-num">Q 30</span>
+    <span class="q-text">Which line causes a compiler error?</span>
+  </div>
+  <pre class="code-block"><span class="kw">public interface</span> <span class="type">MyInterface</span> {
+    <span class="kw">int</span> X = <span class="num">10</span>;          <span class="cmt">// line 2</span>
+    <span class="kw">void</span> doWork();        <span class="cmt">// line 3</span>
+}
+<span class="kw">public class</span> <span class="type">Test</span> <span class="kw">implements</span> <span class="type">MyInterface</span> {
+    <span class="kw">public void</span> doWork() {
+        X = <span class="num">20</span>;           <span class="cmt">// line 8</span>
+    }
+}</pre>
+  <div class="options" id="opts30">
+    <div class="opt" onclick="answer(30,'A')"><span class="opt-letter">A</span>Line 2 — cannot declare int in interface</div>
+    <div class="opt" onclick="answer(30,'B')"><span class="opt-letter">B</span>Line 3 — cannot have void method in interface</div>
+    <div class="opt" onclick="answer(30,'C')"><span class="opt-letter">C</span>Line 8 — cannot assign to final variable X</div>
+    <div class="opt" onclick="answer(30,'D')"><span class="opt-letter">D</span>No error</div>
+  </div>
+  <div class="explanation" id="exp30"><div class="exp-head">✦ Explanation</div><code>X</code> is implicitly <strong>final</strong> in the interface, so it cannot be modified. Line 8 (<code>X = 20;</code>) causes the compiler error: <strong>"cannot assign a value to final variable X"</strong>.</div>
+</div>
+
+<!-- Q31 -->
+<div class="q-card" id="qc31">
+  <div class="q-head">
+    <span class="q-num">Q 31</span>
+    <span class="q-text">Trace the following code. What is printed?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Vehicle</span> {
+    String brand = <span class="str">"Toyota"</span>;
+    <span class="kw">public abstract void</span> describe();
+}
+<span class="kw">class</span> <span class="type">Car</span> <span class="kw">extends</span> <span class="type">Vehicle</span> {
+    <span class="kw">public void</span> describe() {
+        System.out.println(<span class="str">"Brand: "</span> + brand);
+    }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Vehicle</span> v = <span class="kw">new</span> <span class="type">Car</span>();
+        v.describe();
+    }
+}</pre>
+  <div class="options" id="opts31">
+    <div class="opt" onclick="answer(31,'A')"><span class="opt-letter">A</span>Brand: null</div>
+    <div class="opt" onclick="answer(31,'B')"><span class="opt-letter">B</span>Compiler error: cannot instantiate Vehicle</div>
+    <div class="opt" onclick="answer(31,'C')"><span class="opt-letter">C</span>Brand: Toyota</div>
+    <div class="opt" onclick="answer(31,'D')"><span class="opt-letter">D</span>Runtime exception</div>
+  </div>
+  <div class="explanation" id="exp31"><div class="exp-head">✦ Explanation</div>An abstract class reference (<code>Vehicle v</code>) can point to a concrete subclass object (<code>new Car()</code>). <code>v.describe()</code> calls <code>Car</code>'s implementation, printing <strong>Brand: Toyota</strong>.</div>
+</div>
+
+<!-- Q32 -->
+<div class="q-card" id="qc32">
+  <div class="q-head">
+    <span class="q-num">Q 32</span>
+    <span class="q-text">Find the error in this interface declaration:</span>
+  </div>
+  <pre class="code-block"><span class="kw">public interface</span> <span class="type">Movable</span> {
+    <span class="kw">int</span> speed;   <span class="cmt">// line 2</span>
+    <span class="kw">void</span> move();
+}</pre>
+  <div class="options" id="opts32">
+    <div class="opt" onclick="answer(32,'A')"><span class="opt-letter">A</span>Interfaces cannot declare int fields</div>
+    <div class="opt" onclick="answer(32,'B')"><span class="opt-letter">B</span>speed must be initialized because interface fields are final</div>
+    <div class="opt" onclick="answer(32,'C')"><span class="opt-letter">C</span>move() must have a body</div>
+    <div class="opt" onclick="answer(32,'D')"><span class="opt-letter">D</span>No error</div>
+  </div>
+  <div class="explanation" id="exp32"><div class="exp-head">✦ Explanation</div>All interface fields are implicitly <strong>final</strong>. Final variables must be initialized at declaration. <code>int speed;</code> has no initialization value, causing a compiler error. The fix: <code>int speed = 0;</code>.</div>
+</div>
+
+<!-- Q33 -->
+<div class="q-card" id="qc33">
+  <div class="q-head">
+    <span class="q-num">Q 33</span>
+    <span class="q-text">What does this code print?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Shape</span> {
+    <span class="kw">String</span> color = <span class="str">"Red"</span>;
+    <span class="kw">public</span> Shape() { System.out.println(<span class="str">"Shape created"</span>); }
+    <span class="kw">abstract double</span> area();
+}
+<span class="kw">class</span> <span class="type">Circle</span> <span class="kw">extends</span> <span class="type">Shape</span> {
+    <span class="kw">double</span> r;
+    <span class="kw">public</span> Circle(<span class="kw">double</span> r) { <span class="kw">this</span>.r = r; }
+    <span class="kw">public double</span> area() { <span class="kw">return</span> <span class="num">3.14</span> * r * r; }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Circle</span> c = <span class="kw">new</span> <span class="type">Circle</span>(<span class="num">5</span>);
+        System.out.println(c.area());
+    }
+}</pre>
+  <div class="options" id="opts33">
+    <div class="opt" onclick="answer(33,'A')"><span class="opt-letter">A</span>78.5</div>
+    <div class="opt" onclick="answer(33,'B')"><span class="opt-letter">B</span>Shape created<br>78.5</div>
+    <div class="opt" onclick="answer(33,'C')"><span class="opt-letter">C</span>Compiler error</div>
+    <div class="opt" onclick="answer(33,'D')"><span class="opt-letter">D</span>0.0</div>
+  </div>
+  <div class="explanation" id="exp33"><div class="exp-head">✦ Explanation</div>When <code>new Circle(5)</code> is called, the superclass constructor <code>Shape()</code> is implicitly called first, printing "Shape created". Then <code>area()</code> returns <code>3.14 × 5 × 5 = 78.5</code>. Output: <strong>Shape created</strong> then <strong>78.5</strong>.</div>
+</div>
+
+<!-- Q34 -->
+<div class="q-card" id="qc34">
+  <div class="q-head">
+    <span class="q-num">Q 34</span>
+    <span class="q-text">What is the output?</span>
+  </div>
+  <pre class="code-block"><span class="kw">interface</span> <span class="type">Greet</span> {
+    <span class="kw">String</span> MSG = <span class="str">"Hello"</span>;
+    <span class="kw">void</span> greet();
+}
+<span class="kw">class</span> <span class="type">English</span> <span class="kw">implements</span> <span class="type">Greet</span> {
+    <span class="kw">public void</span> greet() {
+        System.out.println(MSG + <span class="str">" World"</span>);
+    }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Greet</span> g = <span class="kw">new</span> <span class="type">English</span>();
+        g.greet();
+    }
+}</pre>
+  <div class="options" id="opts34">
+    <div class="opt" onclick="answer(34,'A')"><span class="opt-letter">A</span>Compiler error</div>
+    <div class="opt" onclick="answer(34,'B')"><span class="opt-letter">B</span>Hello World</div>
+    <div class="opt" onclick="answer(34,'C')"><span class="opt-letter">C</span>null World</div>
+    <div class="opt" onclick="answer(34,'D')"><span class="opt-letter">D</span>MSG World</div>
+  </div>
+  <div class="explanation" id="exp34"><div class="exp-head">✦ Explanation</div><code>MSG</code> is a public static final String in the interface, accessible in the implementing class. <code>MSG + " World" = "Hello World"</code>. The interface reference <code>g</code> calls <code>English</code>'s <code>greet()</code>. Output: <strong>Hello World</strong>.</div>
+</div>
+
+<!-- Q35 -->
+<div class="q-card" id="qc35">
+  <div class="q-head">
+    <span class="q-num">Q 35</span>
+    <span class="q-text">What error occurs here?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Base</span> {
+    <span class="kw">public abstract void</span> print();
+}
+<span class="kw">abstract class</span> <span class="type">Middle</span> <span class="kw">extends</span> <span class="type">Base</span> { }
+<span class="kw">class</span> <span class="type">Child</span> <span class="kw">extends</span> <span class="type">Middle</span> { }
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Child</span> c = <span class="kw">new</span> <span class="type">Child</span>();
+    }
+}</pre>
+  <div class="options" id="opts35">
+    <div class="opt" onclick="answer(35,'A')"><span class="opt-letter">A</span>No error</div>
+    <div class="opt" onclick="answer(35,'B')"><span class="opt-letter">B</span>Middle cannot extend Base</div>
+    <div class="opt" onclick="answer(35,'C')"><span class="opt-letter">C</span>Child is not abstract and does not override abstract method print() in Base</div>
+    <div class="opt" onclick="answer(35,'D')"><span class="opt-letter">D</span>Cannot instantiate Middle</div>
+  </div>
+  <div class="explanation" id="exp35"><div class="exp-head">✦ Explanation</div><code>Middle</code> is abstract so it can skip overriding <code>print()</code>. But <code>Child</code> is a concrete class and still does not provide <code>print()</code>, so the compiler reports: <strong>"Child is not abstract and does not override abstract method print()"</strong>.</div>
+</div>
+
+<!-- Q36 -->
+<div class="q-card" id="qc36">
+  <div class="q-head">
+    <span class="q-num">Q 36</span>
+    <span class="q-text">What is the result of this trace?</span>
+  </div>
+  <pre class="code-block"><span class="kw">interface</span> <span class="type">A</span> { <span class="kw">void</span> hello(); }
+<span class="kw">interface</span> <span class="type">B</span> { <span class="kw">void</span> world(); }
+<span class="kw">class</span> <span class="type">C</span> <span class="kw">implements</span> <span class="type">A</span>, <span class="type">B</span> {
+    <span class="kw">public void</span> hello() { System.out.print(<span class="str">"Hello "</span>); }
+    <span class="kw">public void</span> world() { System.out.print(<span class="str">"World"</span>); }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">A</span> a = <span class="kw">new</span> <span class="type">C</span>();
+        <span class="type">B</span> b = <span class="kw">new</span> <span class="type">C</span>();
+        a.hello();
+        b.world();
+    }
+}</pre>
+  <div class="options" id="opts36">
+    <div class="opt" onclick="answer(36,'A')"><span class="opt-letter">A</span>Compiler error</div>
+    <div class="opt" onclick="answer(36,'B')"><span class="opt-letter">B</span>Hello World</div>
+    <div class="opt" onclick="answer(36,'C')"><span class="opt-letter">C</span>Hello Hello World</div>
+    <div class="opt" onclick="answer(36,'D')"><span class="opt-letter">D</span>WorldHello</div>
+  </div>
+  <div class="explanation" id="exp36"><div class="exp-head">✦ Explanation</div><code>a.hello()</code> prints "Hello " and <code>b.world()</code> prints "World". Both use <code>System.out.print</code> (no newline). Combined output: <strong>Hello World</strong>.</div>
+</div>
+
+<!-- Q37 -->
+<div class="q-card" id="qc37">
+  <div class="q-head">
+    <span class="q-num">Q 37</span>
+    <span class="q-text">Identify ALL errors in this code:</span>
+  </div>
+  <pre class="code-block"><span class="kw">public abstract class</span> <span class="type">Animal</span> {
+    <span class="kw">private abstract void</span> sound(); <span class="cmt">// line 2</span>
+    <span class="kw">static abstract void</span> breathe(); <span class="cmt">// line 3</span>
+}</pre>
+  <div class="options" id="opts37">
+    <div class="opt" onclick="answer(37,'A')"><span class="opt-letter">A</span>Only line 2 has an error</div>
+    <div class="opt" onclick="answer(37,'B')"><span class="opt-letter">B</span>Only line 3 has an error</div>
+    <div class="opt" onclick="answer(37,'C')"><span class="opt-letter">C</span>Both line 2 and line 3 have errors</div>
+    <div class="opt" onclick="answer(37,'D')"><span class="opt-letter">D</span>No errors</div>
+  </div>
+  <div class="explanation" id="exp37"><div class="exp-head">✦ Explanation</div>Both lines are invalid: (1) Abstract methods cannot be <strong>private</strong> — they must be accessible for subclasses to override. (2) Abstract methods cannot be <strong>static</strong> — static methods belong to a class and cannot be overridden polymorphically.</div>
+</div>
+
+<!-- Q38 -->
+<div class="q-card" id="qc38">
+  <div class="q-head">
+    <span class="q-num">Q 38</span>
+    <span class="q-text">What is the output of this code?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Counter</span> {
+    <span class="kw">int</span> count = <span class="num">0</span>;
+    <span class="kw">abstract void</span> increment();
+    <span class="kw">void</span> show() { System.out.println(count); }
+}
+<span class="kw">class</span> <span class="type">ByTwo</span> <span class="kw">extends</span> <span class="type">Counter</span> {
+    <span class="kw">void</span> increment() { count += <span class="num">2</span>; }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Counter</span> c = <span class="kw">new</span> <span class="type">ByTwo</span>();
+        c.increment();
+        c.increment();
+        c.show();
+    }
+}</pre>
+  <div class="options" id="opts38">
+    <div class="opt" onclick="answer(38,'A')"><span class="opt-letter">A</span>0</div>
+    <div class="opt" onclick="answer(38,'B')"><span class="opt-letter">B</span>2</div>
+    <div class="opt" onclick="answer(38,'C')"><span class="opt-letter">C</span>4</div>
+    <div class="opt" onclick="answer(38,'D')"><span class="opt-letter">D</span>Compiler error</div>
+  </div>
+  <div class="explanation" id="exp38"><div class="exp-head">✦ Explanation</div>Each <code>increment()</code> adds 2 to <code>count</code>. After two calls: <code>count = 4</code>. <code>show()</code> prints <strong>4</strong>. The abstract class reference correctly dispatches to <code>ByTwo</code>'s implementation.</div>
+</div>
+
+<!-- Q39 -->
+<div class="q-card" id="qc39">
+  <div class="q-head">
+    <span class="q-num">Q 39</span>
+    <span class="q-text">What does this code print?</span>
+  </div>
+  <pre class="code-block"><span class="kw">interface</span> <span class="type">Printable</span> {
+    <span class="kw">int</span> COPIES = <span class="num">3</span>;
+    <span class="kw">void</span> print();
+}
+<span class="kw">class</span> <span class="type">Doc</span> <span class="kw">implements</span> <span class="type">Printable</span> {
+    <span class="kw">public void</span> print() {
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; COPIES; i++)
+            System.out.print(<span class="str">"Page "</span>);
+    }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="kw">new</span> <span class="type">Doc</span>().print();
+    }
+}</pre>
+  <div class="options" id="opts39">
+    <div class="opt" onclick="answer(39,'A')"><span class="opt-letter">A</span>Page Page</div>
+    <div class="opt" onclick="answer(39,'B')"><span class="opt-letter">B</span>Page Page Page</div>
+    <div class="opt" onclick="answer(39,'C')"><span class="opt-letter">C</span>Compiler error: COPIES is final</div>
+    <div class="opt" onclick="answer(39,'D')"><span class="opt-letter">D</span>Page</div>
+  </div>
+  <div class="explanation" id="exp39"><div class="exp-head">✦ Explanation</div><code>COPIES = 3</code> is a final interface constant. The loop runs 3 times, printing "Page " each time. Final output: <strong>Page Page Page</strong> (on one line with spaces).</div>
+</div>
+
+<!-- Q40 -->
+<div class="q-card" id="qc40">
+  <div class="q-head">
+    <span class="q-num">Q 40</span>
+    <span class="q-text">What error occurs in this code?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Person</span> {
+    String name;
+    <span class="kw">public abstract void</span> introduce();
+}
+<span class="kw">class</span> <span class="type">Student</span> <span class="kw">extends</span> <span class="type">Person</span> {
+    <span class="kw">int</span> grade;
+    <span class="kw">public void</span> introduce() {
+        System.out.println(<span class="str">"Hi, I am "</span> + name);
+    }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Person</span> p = <span class="kw">new</span> <span class="type">Person</span>();
+        p.introduce();
+    }
+}</pre>
+  <div class="options" id="opts40">
+    <div class="opt" onclick="answer(40,'A')"><span class="opt-letter">A</span>Student cannot inherit from Person</div>
+    <div class="opt" onclick="answer(40,'B')"><span class="opt-letter">B</span>Person is abstract; cannot be instantiated</div>
+    <div class="opt" onclick="answer(40,'C')"><span class="opt-letter">C</span>introduce() has no return type</div>
+    <div class="opt" onclick="answer(40,'D')"><span class="opt-letter">D</span>name is not initialized</div>
+  </div>
+  <div class="explanation" id="exp40"><div class="exp-head">✦ Explanation</div>Line <code>new Person()</code> attempts to instantiate an abstract class, which is always a compiler error: <strong>"Person is abstract; cannot be instantiated"</strong>. The fix would be <code>new Student()</code> instead.</div>
+</div>
+
+<!-- Q41 -->
+<div class="q-card" id="qc41">
+  <div class="q-head">
+    <span class="q-num">Q 41</span>
+    <span class="q-text">What is the output?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Base</span> {
+    <span class="kw">int</span> x = <span class="num">10</span>;
+    <span class="kw">abstract int</span> compute();
+    <span class="kw">void</span> display() { System.out.println(<span class="str">"Result: "</span> + compute()); }
+}
+<span class="kw">class</span> <span class="type">Derived</span> <span class="kw">extends</span> <span class="type">Base</span> {
+    <span class="kw">int</span> compute() { <span class="kw">return</span> x * <span class="num">3</span>; }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Base</span> b = <span class="kw">new</span> <span class="type">Derived</span>();
+        b.display();
+    }
+}</pre>
+  <div class="options" id="opts41">
+    <div class="opt" onclick="answer(41,'A')"><span class="opt-letter">A</span>Result: 10</div>
+    <div class="opt" onclick="answer(41,'B')"><span class="opt-letter">B</span>Result: 30</div>
+    <div class="opt" onclick="answer(41,'C')"><span class="opt-letter">C</span>Compiler error</div>
+    <div class="opt" onclick="answer(41,'D')"><span class="opt-letter">D</span>Result: 0</div>
+  </div>
+  <div class="explanation" id="exp41"><div class="exp-head">✦ Explanation</div><code>display()</code> in the abstract class calls <code>compute()</code>. Due to polymorphism, it calls <code>Derived</code>'s <code>compute()</code> which returns <code>x * 3 = 10 * 3 = 30</code>. Output: <strong>Result: 30</strong>.</div>
+</div>
+
+<!-- Q42 -->
+<div class="q-card" id="qc42">
+  <div class="q-head">
+    <span class="q-num">Q 42</span>
+    <span class="q-text">What is the error here?</span>
+  </div>
+  <pre class="code-block"><span class="kw">interface</span> <span class="type">Flyable</span> {
+    <span class="kw">public void</span> fly() {         <span class="cmt">// line 2</span>
+        System.out.println(<span class="str">"Flying"</span>);
+    }
+}</pre>
+  <div class="options" id="opts42">
+    <div class="opt" onclick="answer(42,'A')"><span class="opt-letter">A</span>Interfaces cannot have public methods</div>
+    <div class="opt" onclick="answer(42,'B')"><span class="opt-letter">B</span>Interface methods (traditional) cannot have a body</div>
+    <div class="opt" onclick="answer(42,'C')"><span class="opt-letter">C</span>fly() must return something</div>
+    <div class="opt" onclick="answer(42,'D')"><span class="opt-letter">D</span>No error</div>
+  </div>
+  <div class="explanation" id="exp42"><div class="exp-head">✦ Explanation</div>In the context of this course (traditional interfaces), methods in an interface cannot have a body. The correct declaration is <code>public void fly();</code>. In modern Java (8+) you can use <code>default</code>, but in this course interface methods are abstract method headers only.</div>
+</div>
+
+<!-- Q43 -->
+<div class="q-card" id="qc43">
+  <div class="q-head">
+    <span class="q-num">Q 43</span>
+    <span class="q-text">What does this print?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">A</span> {
+    <span class="kw">public</span> A() { System.out.println(<span class="str">"A"</span>); }
+    <span class="kw">abstract void</span> go();
+}
+<span class="kw">class</span> <span class="type">B</span> <span class="kw">extends</span> <span class="type">A</span> {
+    <span class="kw">public</span> B() { System.out.println(<span class="str">"B"</span>); }
+    <span class="kw">void</span> go() { System.out.println(<span class="str">"Go!"</span>); }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        B obj = <span class="kw">new</span> B();
+        obj.go();
+    }
+}</pre>
+  <div class="options" id="opts43">
+    <div class="opt" onclick="answer(43,'A')"><span class="opt-letter">A</span>B<br>Go!</div>
+    <div class="opt" onclick="answer(43,'B')"><span class="opt-letter">B</span>A<br>B<br>Go!</div>
+    <div class="opt" onclick="answer(43,'C')"><span class="opt-letter">C</span>Go!</div>
+    <div class="opt" onclick="answer(43,'D')"><span class="opt-letter">D</span>Compiler error</div>
+  </div>
+  <div class="explanation" id="exp43"><div class="exp-head">✦ Explanation</div>When <code>new B()</code> is called, Java automatically calls the parent constructor first. So the order is: <strong>A</strong> (parent constructor), then <strong>B</strong> (child constructor), then <strong>Go!</strong> from <code>obj.go()</code>.</div>
+</div>
+
+<!-- Q44 -->
+<div class="q-card" id="qc44">
+  <div class="q-head">
+    <span class="q-num">Q 44</span>
+    <span class="q-text">Which line(s) cause a compiler error?</span>
+  </div>
+  <pre class="code-block"><span class="kw">interface</span> <span class="type">I1</span> { <span class="kw">void</span> m1(); }
+<span class="kw">interface</span> <span class="type">I2</span> { <span class="kw">void</span> m2(); }
+<span class="kw">class</span> <span class="type">X</span> <span class="kw">implements</span> <span class="type">I1</span>, <span class="type">I2</span> {
+    <span class="kw">public void</span> m1() { System.out.println(<span class="str">"m1"</span>); }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        X x = <span class="kw">new</span> X(); <span class="cmt">// line 10</span>
+    }
+}</pre>
+  <div class="options" id="opts44">
+    <div class="opt" onclick="answer(44,'A')"><span class="opt-letter">A</span>No error</div>
+    <div class="opt" onclick="answer(44,'B')"><span class="opt-letter">B</span>Error at class X declaration — X does not implement m2()</div>
+    <div class="opt" onclick="answer(44,'C')"><span class="opt-letter">C</span>Error at line 10 — cannot instantiate X</div>
+    <div class="opt" onclick="answer(44,'D')"><span class="opt-letter">D</span>Error — cannot implement two interfaces</div>
+  </div>
+  <div class="explanation" id="exp44"><div class="exp-head">✦ Explanation</div>The error is at the <strong>class X declaration</strong>: "X is not abstract and does not override abstract method m2() in I2". Since <code>m2()</code> is not implemented, the compiler flags the class declaration.</div>
+</div>
+
+<!-- Q45 -->
+<div class="q-card" id="qc45">
+  <div class="q-head">
+    <span class="q-num">Q 45</span>
+    <span class="q-text">What does the following code output?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Math</span> {
+    <span class="kw">public abstract int</span> calc(<span class="kw">int</span> a, <span class="kw">int</span> b);
+}
+<span class="kw">class</span> <span class="type">Add</span> <span class="kw">extends</span> <span class="type">Math</span> {
+    <span class="kw">public int</span> calc(<span class="kw">int</span> a, <span class="kw">int</span> b) { <span class="kw">return</span> a + b; }
+}
+<span class="kw">class</span> <span class="type">Mul</span> <span class="kw">extends</span> <span class="type">Math</span> {
+    <span class="kw">public int</span> calc(<span class="kw">int</span> a, <span class="kw">int</span> b) { <span class="kw">return</span> a * b; }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Math</span>[] ops = { <span class="kw">new</span> <span class="type">Add</span>(), <span class="kw">new</span> <span class="type">Mul</span>() };
+        <span class="kw">for</span> (<span class="type">Math</span> m : ops)
+            System.out.print(m.calc(<span class="num">3</span>, <span class="num">4</span>) + <span class="str">" "</span>);
+    }
+}</pre>
+  <div class="options" id="opts45">
+    <div class="opt" onclick="answer(45,'A')"><span class="opt-letter">A</span>3 4</div>
+    <div class="opt" onclick="answer(45,'B')"><span class="opt-letter">B</span>7 12</div>
+    <div class="opt" onclick="answer(45,'C')"><span class="opt-letter">C</span>12 7</div>
+    <div class="opt" onclick="answer(45,'D')"><span class="opt-letter">D</span>Compiler error</div>
+  </div>
+  <div class="explanation" id="exp45"><div class="exp-head">✦ Explanation</div><code>Add.calc(3,4)</code> returns <code>7</code>; <code>Mul.calc(3,4)</code> returns <code>12</code>. Polymorphism dispatches correctly through the abstract class array. Output: <strong>7 12</strong>.</div>
+</div>
+
+<!-- Q46 -->
+<div class="q-card" id="qc46">
+  <div class="q-head">
+    <span class="q-num">Q 46</span>
+    <span class="q-text">What is the error in this code?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Geo</span> {
+    <span class="kw">abstract double</span> perimeter();
+    <span class="kw">abstract double</span> area();
+}
+<span class="kw">class</span> <span class="type">Rectangle</span> <span class="kw">extends</span> <span class="type">Geo</span> {
+    <span class="kw">double</span> w, h;
+    <span class="kw">public</span> Rectangle(<span class="kw">double</span> w, <span class="kw">double</span> h) {
+        <span class="kw">this</span>.w = w; <span class="kw">this</span>.h = h;
+    }
+    <span class="kw">double</span> perimeter() { <span class="kw">return</span> <span class="num">2</span>*(w+h); }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Rectangle</span> r = <span class="kw">new</span> <span class="type">Rectangle</span>(<span class="num">4</span>, <span class="num">5</span>);
+    }
+}</pre>
+  <div class="options" id="opts46">
+    <div class="opt" onclick="answer(46,'A')"><span class="opt-letter">A</span>No error</div>
+    <div class="opt" onclick="answer(46,'B')"><span class="opt-letter">B</span>Rectangle is not abstract and does not override abstract method area() in Geo</div>
+    <div class="opt" onclick="answer(46,'C')"><span class="opt-letter">C</span>Rectangle cannot extend Geo</div>
+    <div class="opt" onclick="answer(46,'D')"><span class="opt-letter">D</span>perimeter() must also not be overridden</div>
+  </div>
+  <div class="explanation" id="exp46"><div class="exp-head">✦ Explanation</div>Even though <code>perimeter()</code> is overridden, <code>area()</code> is not. Since <code>Rectangle</code> is concrete (not abstract), the compiler reports: <strong>"Rectangle is not abstract and does not override abstract method area() in Geo"</strong>.</div>
+</div>
+
+<!-- Q47 -->
+<div class="q-card" id="qc47">
+  <div class="q-head">
+    <span class="q-num">Q 47</span>
+    <span class="q-text">Trace and determine the output:</span>
+  </div>
+  <pre class="code-block"><span class="kw">interface</span> <span class="type">Taxable</span> {
+    <span class="kw">double</span> TAX_RATE = <span class="num">0.1</span>;
+    <span class="kw">double</span> calculateTax(<span class="kw">double</span> amount);
+}
+<span class="kw">class</span> <span class="type">Product</span> <span class="kw">implements</span> <span class="type">Taxable</span> {
+    <span class="kw">public double</span> calculateTax(<span class="kw">double</span> amount) {
+        <span class="kw">return</span> amount * TAX_RATE;
+    }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Taxable</span> t = <span class="kw">new</span> <span class="type">Product</span>();
+        System.out.println(t.calculateTax(<span class="num">500</span>));
+    }
+}</pre>
+  <div class="options" id="opts47">
+    <div class="opt" onclick="answer(47,'A')"><span class="opt-letter">A</span>50.0</div>
+    <div class="opt" onclick="answer(47,'B')"><span class="opt-letter">B</span>0.1</div>
+    <div class="opt" onclick="answer(47,'C')"><span class="opt-letter">C</span>500.0</div>
+    <div class="opt" onclick="answer(47,'D')"><span class="opt-letter">D</span>Compiler error</div>
+  </div>
+  <div class="explanation" id="exp47"><div class="exp-head">✦ Explanation</div><code>TAX_RATE = 0.1</code> is a final interface constant. <code>calculateTax(500)</code> returns <code>500 × 0.1 = <strong>50.0</strong></code>. The code is valid — interface reference pointing to implementing class object.</div>
+</div>
+
+<!-- Q48 -->
+<div class="q-card" id="qc48">
+  <div class="q-head">
+    <span class="q-num">Q 48</span>
+    <span class="q-text">What is the error in this code?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Worker</span> {
+    <span class="kw">abstract void</span> work();
+    <span class="kw">abstract void</span> rest();
+}
+<span class="kw">class</span> <span class="type">Programmer</span> <span class="kw">extends</span> <span class="type">Worker</span> {
+    <span class="kw">void</span> work() { System.out.println(<span class="str">"Coding"</span>); }
+    <span class="kw">void</span> rest() { System.out.println(<span class="str">"Gaming"</span>); }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Worker</span> w = <span class="kw">new</span> <span class="type">Programmer</span>();
+        w.work();
+        w.rest();
+        w.sleep(); <span class="cmt">// line 14</span>
+    }
+}</pre>
+  <div class="options" id="opts48">
+    <div class="opt" onclick="answer(48,'A')"><span class="opt-letter">A</span>Programmer must be abstract</div>
+    <div class="opt" onclick="answer(48,'B')"><span class="opt-letter">B</span>w.sleep() — sleep() is not defined in Worker or Programmer</div>
+    <div class="opt" onclick="answer(48,'C')"><span class="opt-letter">C</span>Worker cannot be used as a reference type</div>
+    <div class="opt" onclick="answer(48,'D')"><span class="opt-letter">D</span>No error</div>
+  </div>
+  <div class="explanation" id="exp48"><div class="exp-head">✦ Explanation</div>The error is on line 14: <code>w.sleep()</code>. There is no <code>sleep()</code> method in <code>Worker</code> or <code>Programmer</code>. Compiler reports: <strong>"cannot find symbol: method sleep()"</strong>. Calling <code>w.work()</code> and <code>w.rest()</code> are both valid.</div>
+</div>
+
+<!-- Q49 -->
+<div class="q-card" id="qc49">
+  <div class="q-head">
+    <span class="q-num">Q 49</span>
+    <span class="q-text">What is the output of this complex polymorphism trace?</span>
+  </div>
+  <pre class="code-block"><span class="kw">abstract class</span> <span class="type">Payment</span> {
+    <span class="kw">abstract double</span> getAmount();
+    <span class="kw">void</span> process() {
+        System.out.println(<span class="str">"Processing: "</span> + getAmount());
+    }
+}
+<span class="kw">class</span> <span class="type">Cash</span> <span class="kw">extends</span> <span class="type">Payment</span> {
+    <span class="kw">double</span> getAmount() { <span class="kw">return</span> <span class="num">100.0</span>; }
+}
+<span class="kw">class</span> <span class="type">Card</span> <span class="kw">extends</span> <span class="type">Payment</span> {
+    <span class="kw">double</span> getAmount() { <span class="kw">return</span> <span class="num">250.0</span>; }
+}
+<span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="type">Payment</span>[] p = { <span class="kw">new</span> <span class="type">Cash</span>(), <span class="kw">new</span> <span class="type">Card</span>(), <span class="kw">new</span> <span class="type">Cash</span>() };
+        <span class="kw">for</span> (<span class="type">Payment</span> pay : p) pay.process();
+    }
+}</pre>
+  <div class="options" id="opts49">
+    <div class="opt" onclick="answer(49,'A')"><span class="opt-letter">A</span>Processing: 100.0<br>Processing: 100.0<br>Processing: 100.0</div>
+    <div class="opt" onclick="answer(49,'B')"><span class="opt-letter">B</span>Processing: 100.0<br>Processing: 250.0<br>Processing: 100.0</div>
+    <div class="opt" onclick="answer(49,'C')"><span class="opt-letter">C</span>Compiler error</div>
+    <div class="opt" onclick="answer(49,'D')"><span class="opt-letter">D</span>Processing: 0.0<br>Processing: 0.0<br>Processing: 0.0</div>
+  </div>
+  <div class="explanation" id="exp49"><div class="exp-head">✦ Explanation</div>The array holds Cash, Card, Cash. <code>process()</code> in the abstract class calls the overridden <code>getAmount()</code> polymorphically. Cash → 100.0, Card → 250.0, Cash → 100.0. Output: <strong>Processing: 100.0 / Processing: 250.0 / Processing: 100.0</strong>.</div>
+</div>
+
+<!-- Q50 -->
+<div class="q-card" id="qc50">
+  <div class="q-head">
+    <span class="q-num">Q 50</span>
+    <span class="q-text">Find ALL errors in this code snippet (there may be more than one):</span>
+  </div>
+  <pre class="code-block"><span class="kw">interface</span> <span class="type">Shape</span> {
+    <span class="kw">int</span> sides;                      <span class="cmt">// line 2</span>
+    <span class="kw">private void</span> draw();           <span class="cmt">// line 3</span>
+    <span class="kw">static abstract void</span> rotate(); <span class="cmt">// line 4</span>
+}</span></pre>
+  <div class="options" id="opts50">
+    <div class="opt" onclick="answer(50,'A')"><span class="opt-letter">A</span>Only line 2 has an error</div>
+    <div class="opt" onclick="answer(50,'B')"><span class="opt-letter">B</span>Lines 2 and 3 have errors</div>
+    <div class="opt" onclick="answer(50,'C')"><span class="opt-letter">C</span>Lines 2, 3, and 4 all have errors</div>
+    <div class="opt" onclick="answer(50,'D')"><span class="opt-letter">D</span>No errors</div>
+  </div>
+  <div class="explanation" id="exp50"><div class="exp-head">✦ Explanation</div>Three errors: (1) <strong>Line 2</strong>: <code>sides</code> has no initialization value — interface fields are final and must be initialized. (2) <strong>Line 3</strong>: Interface methods cannot be <code>private</code> — they must be accessible for implementing classes. (3) <strong>Line 4</strong>: <code>static abstract</code> is a contradiction — abstract methods require overriding, but static methods cannot be overridden polymorphically.</div>
+</div>
+
+</div><!-- end questions-wrap -->
+
+<footer>
+  Programming II · OOP · Abstract Classes &amp; Interfaces ·  &nbsp;|&nbsp; 50 Questions
+</footer>
+
+<script>
+// ── Per-question data: original option texts (keyed by original letter) and per-option explanations ──
+// CORRECT_KEY = the original letter that is correct
+// OPTIONS = { A: "text", B: "text", C: "text", D: "text" }
+// EXPLAIN = { A: "why A is right or wrong", B: "...", C: "...", D: "..." }
+const Q_DATA = {
+  1: {
+    correct: 'B',
+    options: {
+      A: 'interface',
+      B: 'abstract',
+      C: 'extends',
+      D: 'virtual'
+    },
+    explain: {
+      A: '❌ <strong>interface</strong> is a keyword for declaring an interface, not a class. These are two distinct constructs in Java.',
+      B: '✅ The <strong>abstract</strong> keyword is placed before <code>class</code> to declare an abstract class: <code>public abstract class ClassName { }</code>.',
+      C: '❌ <strong>extends</strong> is used for inheritance (a class extending another class). It does not make a class abstract.',
+      D: '❌ Java has <strong>no virtual keyword</strong>. That belongs to C++. Java handles polymorphism through method overriding without needing it.'
+    }
+  },
+  2: {
+    correct: 'B',
+    options: {
+      A: 'An abstract class can be instantiated directly',
+      B: 'An abstract class cannot be instantiated, but can be subclassed',
+      C: 'An abstract class must contain only abstract methods',
+      D: 'An abstract class cannot have constructors'
+    },
+    explain: {
+      A: '❌ Abstract classes <strong>cannot</strong> be instantiated. Writing <code>new AbstractClass()</code> causes a compiler error.',
+      B: '✅ Correct. An abstract class <strong>cannot be instantiated</strong> directly but serves as a superclass that other classes extend.',
+      C: '❌ An abstract class can have <strong>both abstract and non-abstract (concrete) methods</strong>. Only at least one abstract method (or the <code>abstract</code> keyword) is needed.',
+      D: '❌ Abstract classes <strong>can have constructors</strong>. Subclasses invoke them via <code>super()</code> to initialize inherited fields.'
+    }
+  },
+  3: {
+    correct: 'C',
+    options: {
+      A: 'A method that is private and cannot be inherited',
+      B: 'A method with a body declared in a superclass',
+      C: 'A method with no body that must be overridden in a subclass',
+      D: 'A method that belongs to an interface only'
+    },
+    explain: {
+      A: '❌ A private method is hidden from subclasses — that is unrelated to being abstract. In fact, abstract methods <em>cannot</em> be private because subclasses need to override them.',
+      B: '❌ A method <em>with</em> a body is a <strong>concrete</strong> method. Abstract methods have <em>no body</em> — just a header ending in a semicolon.',
+      C: '✅ Correct. An abstract method has <strong>no body</strong>: <code>public abstract void method();</code>. Every concrete subclass must override it.',
+      D: '❌ Abstract methods can appear in both <strong>abstract classes and interfaces</strong>. They are not exclusive to interfaces.'
+    }
+  },
+  4: {
+    correct: 'C',
+    options: {
+      A: 'The method is silently ignored',
+      B: 'A runtime exception is thrown',
+      C: 'A compiler error results',
+      D: 'The subclass becomes final'
+    },
+    explain: {
+      A: '❌ Java does <strong>not silently ignore</strong> unimplemented abstract methods. The compiler explicitly rejects this.',
+      B: '❌ This is a <strong>compile-time</strong> error, not a runtime exception. The program never runs; the compiler catches it.',
+      C: '✅ Correct. A concrete subclass that fails to override all abstract methods <strong>cannot compile</strong>. It must either implement them or be declared abstract itself.',
+      D: '❌ The subclass does <strong>not become final</strong>. It must be declared <code>abstract</code> itself to defer implementation, or it must provide the missing overrides.'
+    }
+  },
+  5: {
+    correct: 'B',
+    options: {
+      A: 'Interface',
+      B: 'Superclass (parent class)',
+      C: 'Subclass (child class)',
+      D: 'Static utility class'
+    },
+    explain: {
+      A: '❌ An interface is a <strong>different concept</strong>. While both are related to abstraction, an abstract class is specifically used as a superclass template for related classes.',
+      B: '✅ Correct. An abstract class is designed to be a <strong>superclass</strong> — it represents the generic form of all classes derived from it.',
+      C: '❌ An abstract class is a <strong>superclass</strong>, not a subclass. Other classes extend it, making <em>them</em> the subclasses.',
+      D: '❌ Abstract classes are <strong>not static utility classes</strong>. They are meant to be extended and instantiated indirectly through their subclasses.'
+    }
+  },
+  6: {
+    correct: 'B',
+    options: {
+      A: 'An interface is a class that can be instantiated',
+      B: 'An interface is similar to an abstract class with all abstract methods',
+      C: 'An interface can contain method bodies',
+      D: 'An interface uses the extends keyword in class definition'
+    },
+    explain: {
+      A: '❌ Interfaces <strong>cannot be instantiated</strong>. Writing <code>new MyInterface()</code> causes a compiler error.',
+      B: '✅ Correct. An interface is like an abstract class where <strong>all methods are abstract</strong> method headers, and all fields are public static final.',
+      C: '❌ Traditionally, interface methods have <strong>no body</strong>. They are abstract method headers only (ending with a semicolon, no curly braces).',
+      D: '❌ Classes use the <strong>implements</strong> keyword to adopt an interface, not <code>extends</code>. The <code>extends</code> keyword is for class-to-class or interface-to-interface inheritance.'
+    }
+  },
+  7: {
+    correct: 'C',
+    options: {
+      A: 'extends',
+      B: 'abstract',
+      C: 'implements',
+      D: 'inherits'
+    },
+    explain: {
+      A: '❌ <strong>extends</strong> is used for class-to-class inheritance. A class extends another class; it <em>implements</em> an interface.',
+      B: '❌ <strong>abstract</strong> is a modifier to declare abstract classes or methods. It is not used to adopt an interface.',
+      C: '✅ Correct. A class uses the <strong>implements</strong> keyword to adopt an interface: <code>public class MyClass implements MyInterface { }</code>.',
+      D: '❌ <strong>inherits</strong> is not a Java keyword at all. Java uses <code>extends</code> for class inheritance and <code>implements</code> for interfaces.'
+    }
+  },
+  8: {
+    correct: 'B',
+    options: {
+      A: 'Blueprint',
+      B: 'Contract',
+      C: 'Template',
+      D: 'Module'
+    },
+    explain: {
+      A: '❌ <strong>Blueprint</strong> is sometimes used loosely, but the standard OOP analogy in lectures is a <em>contract</em> — emphasizing the binding obligation to fulfill all method requirements.',
+      B: '✅ Correct. An interface is like a <strong>contract</strong>. When a class implements it, it must fulfill all declared method signatures — no exceptions.',
+      C: '❌ <strong>Template</strong> is more associated with abstract classes or generic programming. The contract analogy better captures the obligation an interface places on implementing classes.',
+      D: '❌ <strong>Module</strong> is a packaging/organization concept. It does not capture the obligation-based relationship between an interface and its implementing classes.'
+    }
+  },
+  9: {
+    correct: 'C',
+    options: {
+      A: 'Only one',
+      B: 'Only two',
+      C: 'Multiple interfaces',
+      D: 'None — a class cannot implement any interface'
+    },
+    explain: {
+      A: '❌ A class can implement <strong>more than one</strong> interface. This is one of the key advantages over extending abstract classes.',
+      B: '❌ There is <strong>no limit of two</strong>. A class can implement as many interfaces as needed, separated by commas after a single <code>implements</code> keyword.',
+      C: '✅ Correct. Java allows a class to implement <strong>multiple interfaces</strong>: <code>class X implements A, B, C { }</code>. However, a class can only extend one superclass.',
+      D: '❌ This is completely false. The entire purpose of interfaces is for classes to <strong>implement them</strong>.'
+    }
+  },
+  10: {
+    correct: 'C',
+    options: {
+      A: 'private and non-static',
+      B: 'protected and static',
+      C: 'public, static, and final',
+      D: 'abstract and mutable'
+    },
+    explain: {
+      A: '❌ Interface fields are never <strong>private</strong>. They are always <code>public</code> so all implementing classes can access them, and they are <code>static final</code>.',
+      B: '❌ Interface fields are not <strong>protected</strong>. They are implicitly <code>public</code>. The complete implicit modifiers are <code>public static final</code>.',
+      C: '✅ Correct. All interface fields are implicitly <strong>public, static, and final</strong>. Because they are final, they must be initialized at declaration.',
+      D: '❌ Interface fields are <strong>not abstract</strong> and are <strong>not mutable</strong>. They are constants (final) with fixed values accessible to all implementing classes.'
+    }
+  },
+  11: {
+    correct: 'B',
+    options: {
+      A: '<code>public abstract void compute() { return; }</code>',
+      B: '<code>public abstract void compute();</code>',
+      C: '<code>private abstract void compute();</code>',
+      D: '<code>static abstract void compute();</code>'
+    },
+    explain: {
+      A: '❌ An abstract method <strong>cannot have a body</strong>. The curly braces contradict <code>abstract</code> and cause a compiler error.',
+      B: '✅ Correct. A valid abstract method has <strong>no body</strong> — just the header ending with a semicolon: <code>public abstract void compute();</code>',
+      C: '❌ Abstract methods <strong>cannot be private</strong>. A private method cannot be seen or overridden by subclasses, which defeats the purpose of declaring it abstract.',
+      D: '❌ Abstract methods <strong>cannot be static</strong>. Static methods belong to the class itself and cannot be overridden polymorphically, which is required for abstract methods.'
+    }
+  },
+  12: {
+    correct: 'B',
+    options: {
+      A: '<code>public abstract class MyInterface { }</code>',
+      B: '<code>public interface MyInterface { }</code>',
+      C: '<code>public implements MyInterface { }</code>',
+      D: '<code>interface abstract MyInterface { }</code>'
+    },
+    explain: {
+      A: '❌ This declares an <strong>abstract class</strong>, not an interface. The <code>interface</code> keyword must replace <code>class</code>.',
+      B: '✅ Correct. The syntax is <code>public interface InterfaceName { method headers; }</code>. The <code>interface</code> keyword replaces <code>class</code>.',
+      C: '❌ <strong>implements</strong> is used by a class to adopt an interface. It is not used in an interface declaration itself. This is invalid syntax.',
+      D: '❌ You cannot write <code>interface abstract</code>. Interfaces are implicitly abstract — just write <code>public interface Name { }</code>.'
+    }
+  },
+  13: {
+    correct: 'C',
+    options: {
+      A: 'Unlimited',
+      B: 'Two',
+      C: 'Only one',
+      D: 'Three'
+    },
+    explain: {
+      A: '❌ Java enforces <strong>single class inheritance</strong>. A class can only extend one superclass, not unlimited. (Multiple interfaces can be implemented, however.)',
+      B: '❌ A class can only extend <strong>one</strong> superclass, not two. Java deliberately avoids multiple class inheritance to prevent the "diamond problem."',
+      C: '✅ Correct. Java supports <strong>single inheritance</strong> — a class can extend exactly <em>one</em> superclass. To gain behavior from multiple sources, implement multiple interfaces.',
+      D: '❌ The limit is <strong>one</strong>, not three. Java strictly enforces single class inheritance regardless of how many superclasses are available.'
+    }
+  },
+  14: {
+    correct: 'B',
+    options: {
+      A: 'An interface can have non-abstract methods; an abstract class cannot',
+      B: 'An abstract class can have both abstract and non-abstract methods; an interface (traditionally) has only abstract method headers',
+      C: 'Both are identical in every way',
+      D: 'A class can implement multiple abstract classes'
+    },
+    explain: {
+      A: '❌ This is <strong>reversed</strong>. Traditionally, <em>interfaces</em> have only abstract headers, while <em>abstract classes</em> can mix abstract and concrete methods.',
+      B: '✅ Correct. An abstract class can contain <strong>both abstract and concrete methods</strong>, constructors, and instance variables. A traditional interface has only abstract method headers and public static final fields.',
+      C: '❌ They are <strong>not identical</strong>. Key differences: abstract classes support constructors, instance fields, and concrete methods; a class can only extend one abstract class but implement many interfaces.',
+      D: '❌ A class can only <strong>extend one class</strong>. It can <em>implement</em> multiple interfaces. This is a fundamental Java rule.'
+    }
+  },
+  15: {
+    correct: 'B',
+    options: {
+      A: 'Implement methods from only the first interface',
+      B: 'Provide implementations for all methods specified in ALL of the interfaces',
+      C: 'Choose which interface\'s methods to implement',
+      D: 'Not implement any methods since interfaces are abstract'
+    },
+    explain: {
+      A: '❌ Java requires implementing methods from <strong>all</strong> interfaces, not just the first one. Ignoring any interface\'s methods causes a compiler error.',
+      B: '✅ Correct. When implementing multiple interfaces, a class must provide concrete implementations for <strong>every method from every interface</strong>, or declare itself abstract.',
+      C: '❌ The class has <strong>no choice</strong>. It must implement every method from every interface it declares. Partial implementation causes a compiler error.',
+      D: '❌ The class <strong>must</strong> implement all methods. The interface specifies what must be done — the implementing class must do it.'
+    }
+  },
+  16: {
+    correct: 'B',
+    options: {
+      A: 'No, interface reference variables are not allowed',
+      B: 'Yes, but only to call methods defined in the interface',
+      C: 'Yes, and it can call any method from the implementing class',
+      D: 'No, you must use the concrete class type'
+    },
+    explain: {
+      A: '❌ Interface reference variables <strong>are allowed</strong> and commonly used for polymorphism. This is a core Java feature.',
+      B: '✅ Correct. An interface reference can hold any implementing class object, but through that reference you can <strong>only call methods declared in the interface</strong>.',
+      C: '❌ Through an interface reference, you can only call methods declared in <strong>that interface</strong>. Extra methods defined only in the implementing class are not accessible without casting.',
+      D: '❌ You do <strong>not</strong> need the concrete class type. Interface references are valid and are the foundation of polymorphic programming in Java.'
+    }
+  },
+  17: {
+    correct: 'B',
+    options: {
+      A: 'Because they are abstract',
+      B: 'Because they are automatically final',
+      C: 'Because all interfaces must be instantiated at some point',
+      D: 'Because the JVM requires it for memory allocation'
+    },
+    explain: {
+      A: '❌ Interface <strong>fields</strong> are not abstract — they are constants (<code>final</code>). The term "abstract" applies to methods, not fields.',
+      B: '✅ Correct. Interface fields are implicitly <strong>final</strong> constants. Since final variables cannot be changed after assignment, they must be initialized right at declaration.',
+      C: '❌ Interfaces <strong>cannot</strong> be instantiated — ever. This reason is entirely false.',
+      D: '❌ Memory allocation is not the reason. The compiler requirement for initialization comes from the <code>final</code> modifier: final fields must have a value at compile time.'
+    }
+  },
+  18: {
+    correct: 'C',
+    options: {
+      A: '<code>public class X implements A implements B</code>',
+      B: '<code>public class X extends A, B</code>',
+      C: '<code>public class X implements A, B</code>',
+      D: '<code>public class X extends A implements B extends C</code>'
+    },
+    explain: {
+      A: '❌ Using <code>implements</code> <strong>twice</strong> is a syntax error. There is one <code>implements</code> keyword; interface names are separated by commas.',
+      B: '❌ <code>extends</code> is for <strong>class inheritance</strong>. Also, you cannot extend multiple classes in Java.',
+      C: '✅ Correct. To implement multiple interfaces: <code>public class X implements A, B</code> — one <code>implements</code> keyword, interfaces separated by commas.',
+      D: '❌ You <strong>cannot use</strong> <code>extends</code> twice. The correct full pattern is <code>class X extends Parent implements A, B</code> with exactly one <code>extends</code> and one <code>implements</code>.'
+    }
+  },
+  19: {
+    correct: 'B',
+    options: {
+      A: 'hides',
+      B: 'implements',
+      C: 'ignores',
+      D: 'overloads'
+    },
+    explain: {
+      A: '❌ <strong>Hiding</strong> refers to static methods being redeclared in a subclass — a different concept. Abstract methods specifically require <em>overriding</em>.',
+      B: '✅ Correct. Abstract methods enforce that every concrete subclass <strong>overrides</strong> the method, guaranteeing that each class provides its own specific implementation.',
+      C: '❌ A subclass <strong>cannot ignore</strong> an abstract method. Not overriding it causes a compiler error (unless the subclass is also declared abstract).',
+      D: '❌ <strong>Overloading</strong> means defining multiple methods with the same name but different parameters in the <em>same</em> class. Abstract methods enforce <em>overriding</em> in subclasses — a completely different concept.'
+    }
+  },
+  20: {
+    correct: 'B',
+    options: {
+      A: 'Declare itself as abstract too',
+      B: 'Override all abstract methods declared in Employee',
+      C: 'Cannot have its own fields',
+      D: 'Implement the interface of Employee'
+    },
+    explain: {
+      A: '❌ Declaring itself abstract would just defer the problem further. A <strong>concrete</strong> class must override all inherited abstract methods to be usable.',
+      B: '✅ Correct. A concrete subclass must <strong>override all abstract methods</strong> from its abstract parent. <code>SalariedEmployee</code> must override <code>get_salary()</code>.',
+      C: '❌ This is false. Subclasses can freely <strong>add their own fields</strong>. <code>SalariedEmployee</code> adds <code>bonus</code> and <code>deduction</code> on top of inherited fields.',
+      D: '❌ <code>Employee</code> is an abstract <strong>class</strong>, not an interface. The relationship uses <code>extends</code>, not <code>implements</code>.'
+    }
+  },
+  21: {
+    correct: 'C',
+    options: {
+      A: 'public',
+      B: 'protected',
+      C: 'private',
+      D: 'package-private (default)'
+    },
+    explain: {
+      A: '❌ <code>public</code> is <strong>valid</strong> for abstract methods. Public abstract methods are visible to all subclasses and can be overridden.',
+      B: '❌ <code>protected</code> is <strong>valid</strong> for abstract methods. Protected abstract methods are visible to subclasses and same-package classes, so they can be overridden.',
+      C: '✅ Correct. Abstract methods <strong>cannot be private</strong>. A private method is invisible to subclasses, so it could never be overridden — a direct contradiction.',
+      D: '❌ Package-private (no modifier) is <strong>valid</strong> for abstract methods within the same package. Subclasses in the same package can still override them.'
+    }
+  },
+  22: {
+    correct: 'B',
+    options: {
+      A: 'The method is new and not inherited',
+      B: 'The method overrides a method from the superclass',
+      C: 'The method is abstract',
+      D: 'The method is static'
+    },
+    explain: {
+      A: '❌ If a method were new and not inherited, <code>@Override</code> would cause a <strong>compiler error</strong>, since there is no parent method to override.',
+      B: '✅ Correct. <code>@Override</code> tells the compiler the method is <strong>overriding</strong> a parent method. The compiler verifies this and reports an error if it does not actually override anything.',
+      C: '❌ <code>@Override</code> marks a <em>concrete</em> override. Abstract methods have no body and cannot override anything.',
+      D: '❌ Static methods cannot be overridden (they are hidden). Using <code>@Override</code> on a static method typically results in a compiler error.'
+    }
+  },
+  23: {
+    correct: 'C',
+    options: {
+      A: 'final',
+      B: 'static',
+      C: 'abstract',
+      D: 'interface'
+    },
+    explain: {
+      A: '❌ <code>final</code> means the class <strong>cannot be extended at all</strong>. It is the opposite of what is needed here.',
+      B: '❌ <code>static</code> is not applicable to top-level class declarations in this context. It does not allow a class to defer method implementation.',
+      C: '✅ Correct. If a class does not implement all interface methods, it must be declared <strong>abstract</strong>. The unimplemented methods remain abstract, to be overridden by a further subclass.',
+      D: '❌ A class cannot become an <code>interface</code>. These are fundamentally different constructs. The missing implementations must be deferred via <code>abstract</code>.'
+    }
+  },
+  24: {
+    correct: 'C',
+    options: {
+      A: 'Compiles and runs with no output',
+      B: 'Runtime NullPointerException',
+      C: 'Compiler error',
+      D: 'Compiles but prints null'
+    },
+    explain: {
+      A: '❌ The code does <strong>not compile</strong>. You cannot instantiate an abstract class.',
+      B: '❌ This is a <strong>compile-time</strong> error, not a runtime error. The compiler catches it before the program can ever run.',
+      C: '✅ Correct. The compiler reports: <em>"Shape is abstract; cannot be instantiated"</em>. Abstract classes can never be directly instantiated.',
+      D: '❌ The program <strong>does not compile</strong>. There is no output because the compiler rejects the code entirely.'
+    }
+  },
+  25: {
+    correct: 'B',
+    options: {
+      A: 'Animal should not be abstract',
+      B: 'Abstract methods cannot have a body',
+      C: 'The method must be private',
+      D: 'No error; code is correct'
+    },
+    explain: {
+      A: '❌ Making <code>Animal</code> abstract is <strong>valid</strong>. The error is in the abstract method having a body, not in the class declaration.',
+      B: '✅ Correct. An abstract method <strong>cannot have a body</strong>. It must end with a semicolon: <code>public abstract void speak();</code> — no curly braces.',
+      C: '❌ Making the method <code>private</code> would be <strong>another error</strong>. Abstract methods cannot be private because subclasses need to override them.',
+      D: '❌ There <strong>is</strong> an error. The abstract method <code>speak()</code> has a body <code>{ ... }</code>, which is illegal for abstract methods.'
+    }
+  },
+  26: {
+    correct: 'C',
+    options: {
+      A: 'Compiler error',
+      B: '5000.0',
+      C: '5800.0',
+      D: '6000.0'
+    },
+    explain: {
+      A: '❌ The code is <strong>valid</strong>. <code>SalariedEmployee</code> properly overrides <code>get_salary()</code>, so no compiler error occurs.',
+      B: '❌ <strong>5000.0</strong> is just the raw <code>salary</code> field. The method returns <code>salary + bonus − deduction = 5000 + 1000 − 200 = 5800.0</code>.',
+      C: '✅ Correct. <code>get_salary()</code> returns <code>5000 + 1000 − 200 = <strong>5800.0</strong></code>.',
+      D: '❌ <strong>6000.0</strong> would mean adding bonus without subtracting the deduction (<code>5000 + 1000 = 6000</code>). The deduction of 200 must be subtracted.'
+    }
+  },
+  27: {
+    correct: 'B',
+    options: {
+      A: 'Creates a Retail_Item object successfully',
+      B: 'Compiler error',
+      C: 'Runtime NullPointerException',
+      D: 'Compiles but nothing is printed'
+    },
+    explain: {
+      A: '❌ Interfaces <strong>cannot be instantiated</strong>. There is no valid way to create a direct instance of an interface.',
+      B: '✅ Correct. The compiler reports: <em>"Retail_Item is abstract; cannot be instantiated"</em>. Interfaces are implicitly abstract and cannot be directly instantiated.',
+      C: '❌ This is a <strong>compile-time</strong> error. The program never runs, so no runtime exception occurs.',
+      D: '❌ The code <strong>does not compile</strong>. There is no runtime output at all.'
+    }
+  },
+  28: {
+    correct: 'B',
+    options: {
+      A: 'Compiler error',
+      B: 'Store = ABC, title = null, price = 0.0, artist = null',
+      C: 'Store = null, title = null, price = null, artist = null',
+      D: 'Store = ABC, title = CD1, price = 0.0, artist = null'
+    },
+    explain: {
+      A: '❌ The code is <strong>valid</strong>. <code>CD</code> properly implements both interfaces and the no-arg constructor is fine.',
+      B: '✅ Correct. The no-arg constructor leaves <code>title</code>/<code>artist</code> as <code>null</code> and <code>price</code> as <code>0.0</code>. <code>storename</code> comes from the interface constant: <strong>"ABC"</strong>.',
+      C: '❌ <code>storename</code> is a <strong>String constant "ABC"</strong> from the interface — it is never null. Also, <code>double</code> fields default to <code>0.0</code>, not null.',
+      D: '❌ <code>title</code> is <strong>null</strong> because the no-arg constructor does not set it. There is no "CD1" value assigned anywhere.'
+    }
+  },
+  29: {
+    correct: 'C',
+    options: {
+      A: '0',
+      B: '1',
+      C: '3',
+      D: 'Compiler error'
+    },
+    explain: {
+      A: '❌ <strong>0</strong> would mean the fields were uninitialized, but <code>FIELD1 = 1</code> and <code>FIELD2 = 2</code> are explicitly initialized constants.',
+      B: '❌ <strong>1</strong> is the value of <code>FIELD1</code> alone. The code computes <code>FIELD1 + FIELD2 = 1 + 2 = 3</code>.',
+      C: '✅ Correct. Interface fields are public static final and accessible in implementing classes. <code>x = FIELD1 + FIELD2 = 1 + 2 = <strong>3</strong></code>.',
+      D: '❌ The code <strong>compiles and runs</strong> successfully. Implementing classes can freely access interface constants.'
+    }
+  },
+  30: {
+    correct: 'C',
+    options: {
+      A: 'Line 2 — cannot declare int in interface',
+      B: 'Line 3 — cannot have void method in interface',
+      C: 'Line 8 — cannot assign to final variable X',
+      D: 'No error'
+    },
+    explain: {
+      A: '❌ Declaring an <code>int</code> field in an interface is <strong>valid</strong>. Interface fields are implicitly public static final — <code>int X = 10;</code> is correct.',
+      B: '❌ Declaring a <code>void</code> method in an interface is <strong>valid</strong>. Abstract method headers (no body, just signature) are the standard content of interfaces.',
+      C: '✅ Correct. <code>X</code> is implicitly <strong>final</strong> in the interface. Line 8 attempts <code>X = 20</code> — assigning to a final variable — causing the compiler error: <em>"cannot assign a value to final variable X"</em>.',
+      D: '❌ There <strong>is</strong> an error. Line 8 tries to reassign the final interface constant <code>X</code>, which is illegal.'
+    }
+  },
+  31: {
+    correct: 'C',
+    options: {
+      A: 'Brand: null',
+      B: 'Compiler error: cannot instantiate Vehicle',
+      C: 'Brand: Toyota',
+      D: 'Runtime exception'
+    },
+    explain: {
+      A: '❌ <code>brand</code> is initialized to <code>"Toyota"</code> in the abstract class. It is <strong>not null</strong>.',
+      B: '❌ <code>Vehicle v = new Car()</code> is <strong>valid</strong>. An abstract class reference can point to a concrete subclass object. The compiler error only occurs when you try <code>new Vehicle()</code> directly.',
+      C: '✅ Correct. <code>Vehicle v = new Car()</code> is valid polymorphism. <code>v.describe()</code> calls <code>Car</code>\'s implementation, which prints <code>brand</code> inherited from <code>Vehicle</code>: <strong>Brand: Toyota</strong>.',
+      D: '❌ There is <strong>no runtime exception</strong>. The code is valid, <code>brand</code> is initialized, and the method call resolves correctly.'
+    }
+  },
+  32: {
+    correct: 'B',
+    options: {
+      A: 'Interfaces cannot declare int fields',
+      B: 'speed must be initialized because interface fields are final',
+      C: 'move() must have a body',
+      D: 'No error'
+    },
+    explain: {
+      A: '❌ Interfaces <strong>can</strong> declare <code>int</code> fields. The issue is not the type but the missing initialization.',
+      B: '✅ Correct. All interface fields are implicitly <strong>final</strong>. Final variables must be initialized at declaration. <code>int speed;</code> has no value, causing a compiler error. Fix: <code>int speed = 0;</code>.',
+      C: '❌ <code>move()</code> is an abstract method header and <strong>should not have a body</strong>. Abstract method headers in interfaces end with a semicolon, no curly braces needed.',
+      D: '❌ There <strong>is</strong> an error. The uninitialized final field <code>speed</code> violates the rule that interface fields must be assigned a value at declaration.'
+    }
+  },
+  33: {
+    correct: 'B',
+    options: {
+      A: '78.5',
+      B: 'Shape created<br>78.5',
+      C: 'Compiler error',
+      D: '0.0'
+    },
+    explain: {
+      A: '❌ <strong>78.5</strong> alone is incomplete. When <code>new Circle(5)</code> is called, the superclass constructor <code>Shape()</code> runs first, printing "Shape created" before the area is computed.',
+      B: '✅ Correct. <code>new Circle(5)</code> implicitly calls the parent <code>Shape()</code> constructor first → prints "Shape created". Then <code>area()</code> returns <code>3.14 × 5 × 5 = <strong>78.5</strong></code>.',
+      C: '❌ The code is <strong>valid</strong>. <code>Circle</code> properly overrides the abstract <code>area()</code> method.',
+      D: '❌ <strong>0.0</strong> would only occur if <code>r</code> were uninitialized (defaulting to 0), but the constructor sets <code>r = 5</code>.'
+    }
+  },
+  34: {
+    correct: 'B',
+    options: {
+      A: 'Compiler error',
+      B: 'Hello World',
+      C: 'null World',
+      D: 'MSG World'
+    },
+    explain: {
+      A: '❌ The code is <strong>valid</strong>. <code>MSG</code> is a public static final constant accessible in the implementing class, and using an interface reference is valid.',
+      B: '✅ Correct. <code>MSG = "Hello"</code> is a final interface constant accessible in <code>English</code>. Output: <code>"Hello" + " World" = <strong>Hello World</strong></code>.',
+      C: '❌ <code>MSG</code> is <strong>not null</strong>. It is explicitly initialized to <code>"Hello"</code> as a final constant in the interface.',
+      D: '❌ <code>MSG</code> is replaced by its value <code>"Hello"</code> at runtime — not printed as the literal text "MSG".'
+    }
+  },
+  35: {
+    correct: 'C',
+    options: {
+      A: 'No error',
+      B: 'Middle cannot extend Base',
+      C: 'Child is not abstract and does not override abstract method print() in Base',
+      D: 'Cannot instantiate Middle'
+    },
+    explain: {
+      A: '❌ There <strong>is</strong> an error. <code>Child</code> is concrete but never provides an implementation for <code>print()</code>.',
+      B: '❌ An abstract class <strong>can extend another abstract class</strong>. <code>Middle extends Base</code> is perfectly valid and simply defers the obligation to concrete subclasses.',
+      C: '✅ Correct. <code>Middle</code> is abstract so it can skip overriding <code>print()</code>. But <code>Child</code> is concrete and still missing the override. The compiler reports this error at the <code>Child</code> class declaration.',
+      D: '❌ The code does not try to instantiate <code>Middle</code>. It instantiates <code>Child</code>, which is the problematic class (missing the override).'
+    }
+  },
+  36: {
+    correct: 'B',
+    options: {
+      A: 'Compiler error',
+      B: 'Hello World',
+      C: 'Hello Hello World',
+      D: 'WorldHello'
+    },
+    explain: {
+      A: '❌ The code is <strong>valid</strong>. Using different interface references pointing to the same implementing class is correct polymorphism.',
+      B: '✅ Correct. <code>a.hello()</code> prints "Hello " and <code>b.world()</code> prints "World". Both use <code>System.out.print</code> (no newline). Combined: <strong>Hello World</strong>.',
+      C: '❌ <strong>"Hello Hello World"</strong> would require calling <code>hello()</code> twice. There is only one call to <code>a.hello()</code>.',
+      D: '❌ <strong>"WorldHello"</strong> would require <code>b.world()</code> to run before <code>a.hello()</code>. The code calls <code>a.hello()</code> first on line 9.'
+    }
+  },
+  37: {
+    correct: 'C',
+    options: {
+      A: 'Only line 2 has an error',
+      B: 'Only line 3 has an error',
+      C: 'Both line 2 and line 3 have errors',
+      D: 'No errors'
+    },
+    explain: {
+      A: '❌ <strong>Both</strong> lines have errors. Line 3 (<code>static abstract</code>) is also invalid — you cannot combine static and abstract.',
+      B: '❌ <strong>Both</strong> lines have errors. Line 2 (<code>private abstract</code>) is also invalid — abstract methods cannot be private.',
+      C: '✅ Correct. Line 2: abstract methods <strong>cannot be private</strong> (subclasses need to override them). Line 3: abstract methods <strong>cannot be static</strong> (static methods cannot be overridden polymorphically).',
+      D: '❌ There are <strong>two errors</strong> — one on each line. Both <code>private abstract</code> and <code>static abstract</code> are illegal combinations.'
+    }
+  },
+  38: {
+    correct: 'C',
+    options: {
+      A: '0',
+      B: '2',
+      C: '4',
+      D: 'Compiler error'
+    },
+    explain: {
+      A: '❌ <strong>0</strong> would mean <code>increment()</code> was never called or had no effect. It is called twice, each time adding 2.',
+      B: '❌ <strong>2</strong> would be the result after only <em>one</em> call. <code>increment()</code> is called <strong>twice</strong>, giving <code>0 + 2 + 2 = 4</code>.',
+      C: '✅ Correct. Each <code>increment()</code> adds 2 to <code>count</code>. After two calls: <code>count = 4</code>. <code>show()</code> prints <strong>4</strong>.',
+      D: '❌ The code is <strong>valid</strong>. <code>ByTwo</code> correctly overrides the abstract <code>increment()</code> method and the abstract class reference is used properly.'
+    }
+  },
+  39: {
+    correct: 'B',
+    options: {
+      A: 'Page Page',
+      B: 'Page Page Page',
+      C: 'Compiler error: COPIES is final',
+      D: 'Page'
+    },
+    explain: {
+      A: '❌ <strong>"Page Page"</strong> would only print if the loop ran twice. <code>COPIES = 3</code>, so the loop runs <strong>three</strong> times.',
+      B: '✅ Correct. <code>COPIES = 3</code> is a final interface constant. The loop runs 3 times, printing "Page " each time. Output: <strong>Page Page Page</strong>.',
+      C: '❌ <code>COPIES</code> being final only prevents <strong>reassignment</strong>. Reading its value in a loop condition is perfectly valid and causes no error.',
+      D: '❌ <strong>"Page"</strong> would only print if the loop ran once. <code>COPIES = 3</code> causes it to run three times.'
+    }
+  },
+  40: {
+    correct: 'B',
+    options: {
+      A: 'Student cannot inherit from Person',
+      B: 'Person is abstract; cannot be instantiated',
+      C: 'introduce() has no return type',
+      D: 'name is not initialized'
+    },
+    explain: {
+      A: '❌ <code>Student extends Person</code> is <strong>perfectly valid</strong>. A class can always extend an abstract class.',
+      B: '✅ Correct. <code>new Person()</code> attempts to instantiate an abstract class. The compiler reports: <em>"Person is abstract; cannot be instantiated"</em>. Use <code>new Student()</code> instead.',
+      C: '❌ <code>introduce()</code> has a return type: <strong>void</strong>. Void is a valid return type meaning the method returns nothing.',
+      D: '❌ <code>name</code> not being initialized is fine — it defaults to <code>null</code> for String fields. This is not a compiler error; the real error is instantiating the abstract class.'
+    }
+  },
+  41: {
+    correct: 'B',
+    options: {
+      A: 'Result: 10',
+      B: 'Result: 30',
+      C: 'Compiler error',
+      D: 'Result: 0'
+    },
+    explain: {
+      A: '❌ <strong>Result: 10</strong> would mean <code>compute()</code> just returned <code>x</code> without multiplying. <code>Derived.compute()</code> returns <code>x * 3 = 30</code>.',
+      B: '✅ Correct. <code>display()</code> in the abstract class calls <code>compute()</code>. Polymorphism dispatches to <code>Derived.compute()</code>, returning <code>10 * 3 = 30</code>. Output: <strong>Result: 30</strong>.',
+      C: '❌ The code is <strong>valid</strong>. <code>Derived</code> properly overrides <code>compute()</code> and <code>Base</code> reference is used correctly.',
+      D: '❌ <strong>Result: 0</strong> would occur if <code>x</code> were 0. But <code>x = 10</code> is explicitly initialized in <code>Base</code>.'
+    }
+  },
+  42: {
+    correct: 'B',
+    options: {
+      A: 'Interfaces cannot have public methods',
+      B: 'Interface methods (traditional) cannot have a body',
+      C: 'fly() must return something',
+      D: 'No error'
+    },
+    explain: {
+      A: '❌ Interface methods <strong>can be public</strong>. In fact, they are implicitly public. The error is the method <em>body</em>, not the access modifier.',
+      B: '✅ Correct. In traditional interfaces (as taught in this course), methods cannot have a body. The correct form is <code>public void fly();</code> — a header with no implementation.',
+      C: '❌ <code>void</code> is a <strong>valid return type</strong> meaning the method returns nothing. This is not the error.',
+      D: '❌ There <strong>is</strong> an error. The traditional interface method <code>fly()</code> has a body <code>{ ... }</code>, which is not allowed in this context.'
+    }
+  },
+  43: {
+    correct: 'B',
+    options: {
+      A: 'B<br>Go!',
+      B: 'A<br>B<br>Go!',
+      C: 'Go!',
+      D: 'Compiler error'
+    },
+    explain: {
+      A: '❌ Missing "A". When <code>new B()</code> runs, Java automatically calls the <strong>parent constructor first</strong> (<code>A()</code>), which prints "A" before "B".',
+      B: '✅ Correct. <code>new B()</code> calls <code>A()</code> first → prints "A", then <code>B()</code> → prints "B", then <code>obj.go()</code> → prints "Go!". Output: <strong>A, B, Go!</strong>.',
+      C: '❌ Printing only "Go!" ignores the constructor chain. Both <code>A()</code> and <code>B()</code> constructors run and print before <code>go()</code> is called.',
+      D: '❌ The code is <strong>valid</strong>. <code>B</code> properly overrides <code>go()</code> and no illegal operations are performed.'
+    }
+  },
+  44: {
+    correct: 'B',
+    options: {
+      A: 'No error',
+      B: 'Error at class X declaration — X does not implement m2()',
+      C: 'Error at line 10 — cannot instantiate X',
+      D: 'Error — cannot implement two interfaces'
+    },
+    explain: {
+      A: '❌ There <strong>is</strong> an error. <code>X</code> implements <code>I2</code> but never provides <code>m2()</code>.',
+      B: '✅ Correct. The error is flagged at the <strong>class X declaration</strong>: <em>"X is not abstract and does not override abstract method m2() in I2"</em>.',
+      C: '❌ The issue is at the <strong>class declaration</strong>, not at the instantiation on line 10. The compiler rejects the class definition itself because of the missing override.',
+      D: '❌ Implementing <strong>two interfaces</strong> is completely valid in Java. The error is solely the missing implementation of <code>m2()</code>.'
+    }
+  },
+  45: {
+    correct: 'B',
+    options: {
+      A: '3 4',
+      B: '7 12',
+      C: '12 7',
+      D: 'Compiler error'
+    },
+    explain: {
+      A: '❌ <strong>"3 4"</strong> are the input arguments, not the results. <code>Add.calc(3,4)</code> returns their <em>sum</em> (7) and <code>Mul.calc(3,4)</code> returns their <em>product</em> (12).',
+      B: '✅ Correct. <code>Add.calc(3,4) = 7</code> and <code>Mul.calc(3,4) = 12</code>. The array iterates Add first, then Mul. Output: <strong>7 12</strong>.',
+      C: '❌ <strong>"12 7"</strong> would require Mul to run before Add, but the array is <code>{ new Add(), new Mul() }</code> — Add is index 0 and runs first.',
+      D: '❌ The code is <strong>valid</strong>. Both subclasses properly override <code>calc()</code> and the abstract array reference is used correctly.'
+    }
+  },
+  46: {
+    correct: 'B',
+    options: {
+      A: 'No error',
+      B: 'Rectangle is not abstract and does not override abstract method area() in Geo',
+      C: 'Rectangle cannot extend Geo',
+      D: 'perimeter() must also not be overridden'
+    },
+    explain: {
+      A: '❌ There <strong>is</strong> an error. <code>Rectangle</code> is concrete but does not override <code>area()</code>.',
+      B: '✅ Correct. Even though <code>perimeter()</code> is overridden, <code>area()</code> is not. The compiler reports: <em>"Rectangle is not abstract and does not override abstract method area() in Geo"</em>.',
+      C: '❌ Extending <code>Geo</code> is <strong>perfectly valid</strong>. The error is the missing <code>area()</code> override, not the inheritance relationship.',
+      D: '❌ <code>perimeter()</code> being overridden is <strong>correct behavior</strong>. Overriding abstract methods is exactly what subclasses are supposed to do.'
+    }
+  },
+  47: {
+    correct: 'A',
+    options: {
+      A: '50.0',
+      B: '0.1',
+      C: '500.0',
+      D: 'Compiler error'
+    },
+    explain: {
+      A: '✅ Correct. <code>TAX_RATE = 0.1</code> is a final interface constant. <code>calculateTax(500)</code> returns <code>500 × 0.1 = <strong>50.0</strong></code>.',
+      B: '❌ <strong>0.1</strong> is just the value of <code>TAX_RATE</code> itself. The method multiplies <code>amount × TAX_RATE = 500 × 0.1 = 50.0</code>.',
+      C: '❌ <strong>500.0</strong> is just the input amount. The method applies the tax rate, returning <code>500 × 0.1 = 50.0</code>, not the original amount.',
+      D: '❌ The code is <strong>valid</strong>. Interface constants are accessible in implementing classes, and using an interface reference to call an implemented method is correct.'
+    }
+  },
+  48: {
+    correct: 'B',
+    options: {
+      A: 'Programmer must be abstract',
+      B: 'w.sleep() — sleep() is not defined in Worker or Programmer',
+      C: 'Worker cannot be used as a reference type',
+      D: 'No error'
+    },
+    explain: {
+      A: '❌ <code>Programmer</code> does <strong>not need to be abstract</strong>. It correctly overrides both <code>work()</code> and <code>rest()</code>, so it is a valid concrete class.',
+      B: '✅ Correct. The error is on the <code>w.sleep()</code> call. Neither <code>Worker</code> nor <code>Programmer</code> declares a <code>sleep()</code> method. The compiler reports: <em>"cannot find symbol: method sleep()"</em>.',
+      C: '❌ Abstract class references are <strong>valid</strong>. <code>Worker w = new Programmer()</code> is correct Java polymorphism.',
+      D: '❌ There <strong>is</strong> an error. Calling <code>w.sleep()</code> fails because <code>sleep()</code> does not exist in <code>Worker</code> or <code>Programmer</code>.'
+    }
+  },
+  49: {
+    correct: 'B',
+    options: {
+      A: 'Processing: 100.0<br>Processing: 100.0<br>Processing: 100.0',
+      B: 'Processing: 100.0<br>Processing: 250.0<br>Processing: 100.0',
+      C: 'Compiler error',
+      D: 'Processing: 0.0<br>Processing: 0.0<br>Processing: 0.0'
+    },
+    explain: {
+      A: '❌ The array is <code>{ new Cash(), new Card(), new Cash() }</code>. <code>Card.getAmount()</code> returns 250.0, not 100.0 — so the second line is different.',
+      B: '✅ Correct. Polymorphism dispatches <code>getAmount()</code> to each object\'s type: Cash→100.0, Card→250.0, Cash→100.0. Output: <strong>Processing: 100.0 / 250.0 / 100.0</strong>.',
+      C: '❌ The code is <strong>valid</strong>. Both subclasses override <code>getAmount()</code> and the array of abstract class references is legal.',
+      D: '❌ <strong>0.0</strong> would occur if <code>getAmount()</code> returned 0, but <code>Cash</code> returns 100.0 and <code>Card</code> returns 250.0 — both explicitly defined.'
+    }
+  },
+  50: {
+    correct: 'C',
+    options: {
+      A: 'Only line 2 has an error',
+      B: 'Lines 2 and 3 have errors',
+      C: 'Lines 2, 3, and 4 all have errors',
+      D: 'No errors'
+    },
+    explain: {
+      A: '❌ Line 2 has an error, but so do lines 3 and 4. All three lines are invalid.',
+      B: '❌ Lines 2 and 3 have errors, but <strong>so does line 4</strong>. <code>static abstract</code> is an illegal combination.',
+      C: '✅ Correct. Three errors: (1) <strong>Line 2</strong>: <code>sides</code> is not initialized — interface fields are final and must have a value. (2) <strong>Line 3</strong>: <code>private</code> methods in interfaces are not allowed. (3) <strong>Line 4</strong>: <code>static abstract</code> is a contradiction — abstract requires overriding, but static methods cannot be overridden.',
+      D: '❌ There are <strong>three errors</strong> — one on each of lines 2, 3, and 4.'
+    }
+  }
+};
+
+// ── Shuffle helper ──────────────────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ── Runtime state ───────────────────────────────────────────────────────────
+// shuffledMap[qNum] = { order: ['B','A','D','C'], correctNewLetter: 'A' }
+const shuffledMap = {};
+let score = 0;
+let answered = {};
+
+// ── Build and inject shuffled options on page load ──────────────────────────
+function initQuiz() {
+  const letters = ['A','B','C','D'];
+  for (let qNum = 1; qNum <= 60; qNum++) {
+    const data = Q_DATA[qNum];
+    if (!data) continue;
+    const optsDiv = document.getElementById('opts' + qNum);
+    if (!optsDiv) continue;
+
+    // Shuffle original keys ['A','B','C','D']
+    const origKeys = shuffle(['A','B','C','D']);
+    shuffledMap[qNum] = { order: origKeys };
+
+    // Rebuild option divs
+    optsDiv.innerHTML = '';
+    origKeys.forEach((origKey, idx) => {
+      const newLetter = letters[idx];
+      const div = document.createElement('div');
+      div.className = 'opt';
+      div.innerHTML = `<span class="opt-letter">${newLetter}</span>${data.options[origKey]}`;
+      div.onclick = (function(n, ol) { return function() { answer(n, ol); }; })(qNum, origKey);
+      optsDiv.appendChild(div);
+    });
+  }
+}
+
+// ── Answer handler ──────────────────────────────────────────────────────────
+function answer(qNum, chosenOrigKey) {
+  if (answered[qNum]) return;
+  answered[qNum] = chosenOrigKey;
+
+  const data = Q_DATA[qNum];
+  const correctOrigKey = data.correct;
+  const isCorrect = (chosenOrigKey === correctOrigKey);
+
+  // Highlight options
+  const optsDiv = document.getElementById('opts' + qNum);
+  const opts = optsDiv.querySelectorAll('.opt');
+  const order = shuffledMap[qNum].order;
+
+  opts.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    const origKey = order[i];
+    if (origKey === correctOrigKey) opt.classList.add('correct');
+    else if (origKey === chosenOrigKey && !isCorrect) opt.classList.add('wrong');
+  });
+
+  // Build explanation content
+  const expDiv = document.getElementById('exp' + qNum);
+  let html = '<div class="exp-head">✦ Explanation</div>';
+
+  if (isCorrect) {
+    html += `<div class="exp-correct-banner">✅ Correct!</div>`;
+  } else {
+    html += `<div class="exp-wrong-banner">❌ Incorrect — see why below.</div>`;
+  }
+
+  // Show per-option explanations in current shuffled order
+  html += '<div class="exp-options">';
+  const letters = ['A','B','C','D'];
+  order.forEach((origKey, idx) => {
+    const newLetter = letters[idx];
+    const isThisCorrect = origKey === correctOrigKey;
+    const wasChosen = origKey === chosenOrigKey;
+    const cls = isThisCorrect ? 'exp-opt correct-opt' : (wasChosen ? 'exp-opt wrong-opt' : 'exp-opt neutral-opt');
+    html += `<div class="${cls}"><span class="exp-opt-lbl">${newLetter}</span><span>${data.explain[origKey]}</span></div>`;
+  });
+  html += '</div>';
+
+  expDiv.innerHTML = html;
+  expDiv.classList.add('show');
+
+  const card = document.getElementById('qc' + qNum);
+  if (isCorrect) {
+    score++;
+    card.classList.add('answered-correct');
+  } else {
+    card.classList.add('answered-wrong');
+  }
+
+  updateScore();
+}
+
+// ── Score display ───────────────────────────────────────────────────────────
+function updateScore() {
+  const total = Object.keys(answered).length;
+  document.getElementById('score-big').textContent = score + ' / 60';
+  document.getElementById('score-display').textContent = score;
+  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+  let msg = '';
+  if (total === 0) msg = 'Answer questions to see your progress';
+  else if (pct >= 90) msg = '🏆 Excellent work! Outstanding performance.';
+  else if (pct >= 75) msg = '✅ Good job! Keep it up.';
+  else if (pct >= 60) msg = '📖 Not bad — review the explanations carefully.';
+  else msg = '💡 Keep studying — read each explanation thoroughly.';
+  document.getElementById('score-msg').textContent = msg;
+}
+
+// ── Reset ───────────────────────────────────────────────────────────────────
+function resetAll() {
+  score = 0;
+  answered = {};
+  initQuiz(); // Re-shuffle on reset
+  for (let i = 1; i <= 60; i++) {
+    const card = document.getElementById('qc' + i);
+    if (!card) continue;
+    card.classList.remove('answered-correct', 'answered-wrong');
+    const exp = document.getElementById('exp' + i);
+    if (exp) { exp.classList.remove('show'); exp.innerHTML = ''; }
+  }
+  updateScore();
+}
+
+// ── Init on load ─────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', initQuiz);
+</script>
+
+<style>
+.exp-correct-banner {
+  background: rgba(34,211,160,0.12);
+  border: 1px solid var(--correct);
+  color: var(--correct);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.exp-wrong-banner {
+  background: rgba(248,113,113,0.12);
+  border: 1px solid var(--wrong);
+  color: var(--wrong);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.exp-options { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.exp-opt {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 7px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.exp-opt-lbl {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.correct-opt { background: rgba(34,211,160,0.07); border: 1px solid rgba(34,211,160,0.25); }
+.correct-opt .exp-opt-lbl { background: rgba(34,211,160,0.2); color: var(--correct); }
+.wrong-opt { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.25); }
+.wrong-opt .exp-opt-lbl { background: rgba(248,113,113,0.2); color: var(--wrong); }
+.neutral-opt { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); color: var(--muted); }
+.neutral-opt .exp-opt-lbl { background: rgba(255,255,255,0.08); color: var(--muted); }
+</style>
+</body>
+</html>
